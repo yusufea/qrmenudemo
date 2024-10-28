@@ -20,7 +20,9 @@ export default function Header() {
         <div>
             <div className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900">
                 <div className="flex justify-between h-full">
-                    <img className="w-14 h-14 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRi84iuDjRQz6FKaFClc9gV_ox3Tx1LwgbctQ&s" />
+                    <a href="/RestaurantPage">
+                        <img className="w-14 h-14 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRi84iuDjRQz6FKaFClc9gV_ox3Tx1LwgbctQ&s" />
+                    </a>
                     <div className="h-14">
                         <div className="h-full flex flex-col justify-center items-center">
                             <ThemeSwitcher />
@@ -29,14 +31,14 @@ export default function Header() {
                 </div>
             </div>
             <div className="w-screen border-b border-gray-300 dark:border-gray-700"></div>
-            <div className="relative flex items-center border-b border-gray-300 dark:bg-slate-800">
+            <div className="relative flex items-center border-b border-slate-600 dark:bg-slate-800">
                 {/* Sol Kaydırma Oku */}
                 <button
                     onClick={() => scrollLeft(scrollRefNavbarCategories)}
                     className="absolute left-3 z-10 rounded-full hover:bg-gray-300"
                     style={{ transform: 'translateX(-50%)' }}
                 >
-                    <FaChevronLeft className="dark:text-slate-400" />
+                    <FaChevronLeft className="text-slate-600 dark:text-slate-400" />
                 </button>
 
                 {/* Kategori Listesi */}
