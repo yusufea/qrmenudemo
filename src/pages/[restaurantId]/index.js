@@ -6,24 +6,20 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 export default function RestaurantPage() {
     const router = useRouter();
     const { restaurantId } = router.query;
-    const [restaurant, setRestaurant] = useState(null);
+
+    const [categories, setCategories] = useState(null);
 
     useEffect(() => {
         if (restaurantId) {
-            const fetchRestaurant = async () => {
-                try {
-                    const response = await axios.get(`http://menoozi.com.tr/api/categories/9ab8ea1d-aef5-4990-a633-11a7b63ad4de`);
-                    setRestaurant(response.data);
-                } catch (error) {
-                    console.error('Veri alınamadı:', error);
-                }
-            };
-
-            fetchRestaurant();
+            GetRestaurantCategories(restaurantId);
         }
-    }, [restaurantId]);
+    }, [router.query]);
 
-    if (!restaurant) return <p>Yükleniyor...</p>;
+    const GetRestaurantCategories = async (restaurantId) => {
+        axios.get(`http://menoozi.com.tr/api/categories/${restaurantId}`).then(data => {
+            setCategories(data.data)
+        }).catch(error => console.log(error));
+    }
 
     const scrollRefMostSeller = useRef(null);
 
@@ -46,30 +42,7 @@ export default function RestaurantPage() {
 
         return () => clearInterval(interval);
     }, []);
-
-
-
-    const categories = [
-        { name: "Kahvaltı", image: "/images/categories/cate1.webp", columns: 6 },
-        { name: "Nargile", image: "/images/categories/cate2.webp", columns: 6 },
-        { name: "Tatlılar", image: "/images/categories/cate3.webp", columns: 4 },
-        { name: "İçecekler", image: "/images/categories/cate3.webp", columns: 8 },
-        { name: "Çay", image: "/images/categories/cate1.webp", columns: 6 },
-        { name: "Kahve", image: "/images/categories/cate2.webp", columns: 6 },
-    ];
-
-    let currentRow = 0;
-
-    const organizedCategories = categories.reduce((rows, category) => {
-        if (!rows[currentRow] || rows[currentRow].totalColumns + category.columns > 12) {
-            rows.push({ items: [category], totalColumns: category.columns });
-            currentRow = rows.length - 1;
-        } else {
-            rows[currentRow].items.push(category);
-            rows[currentRow].totalColumns += category.columns;
-        }
-        return rows;
-    }, []);
+    console.log(categories)
     return (
         <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2 mt-1">
@@ -103,7 +76,7 @@ export default function RestaurantPage() {
                             { image: "/images/products/prod2.webp", text: "Ürün 8", href: "nargile" },
                         ].map((item, index) => (
                             <a href={`/urun/${item.href}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 3)' }}>
-                                <img src={item.image} alt={item.text} className="w-full h-full rounded-full" />
+                                <img src={item.image} alt={item.text} className="w-full h-full rounded-lg" />
                                 <span className="text-sm text-gray-700 mt-2 dark:text-white">{item.text}</span>
                             </a>
                         ))}
@@ -121,7 +94,26 @@ export default function RestaurantPage() {
             <div className="flex flex-col gap-2">
                 <h4 className="text-center text-black text-lg font-bold dark:text-white">Kategoriler</h4>
                 <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
-                    {organizedCategories.map((row, rowIndex) => (
+                    <div className="flex flex-wrap gap-2.5">
+                        {categories?.map((category, index) => (
+                            <a
+                                href={`/${restaurantId}/${category.id}`}
+                                key={index}
+                                className="flex flex-col items-center"
+                                style={{ width: `calc((100% / ${category.column_size === 1 ? '2' : '1'}) - 5px)` }}
+                            >
+                                <div className="relative w-full h-[150px] rounded-lg">
+                                    <img src={category.image == undefined ? '/images/noimage.jpg' : category.image} alt={category.name} className="border w-full h-full object-cover opacity-80 rounded-lg" />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-lg font-bold text-white text-center px-2 py-1 break-all">
+                                            {category.name_tr}
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                    {/* {organizedCategories.map((row, rowIndex) => (
                         <div key={rowIndex} className="flex w-full gap-2 mb-2.5">
                             {row.items.map((category, index) => (
                                 <a
@@ -141,7 +133,7 @@ export default function RestaurantPage() {
                                 </a>
                             ))}
                         </div>
-                    ))}
+                    ))} */}
                 </div>
             </div>
 

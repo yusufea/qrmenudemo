@@ -1,8 +1,9 @@
 import "@/styles/globals.css";
 import Providers from "./providers";
 import Layout from "@/components/Layout/Layout";
+import { appWithTranslation } from 'next-i18next';
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
     <Providers>
       <Layout>
@@ -11,3 +12,5 @@ export default function App({ Component, pageProps }) {
     </Providers>
   )
 }
+
+export default appWithTranslation(App);

@@ -1,6 +1,11 @@
+import axios from "axios";
 import ThemeSwitcher from "@/components/switch/ThemeSwitcher";
-import { useRef } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import en from "../../../../locales/en";
+import tr from "../../../../locales/tr";
 
 export default function Header() {
     const scrollRefNavbarCategories = useRef(null);
@@ -16,13 +21,35 @@ export default function Header() {
             scrollRef.current.scrollBy({ left: 150, behavior: "smooth" });
         }
     };
+
+    const router = useRouter();
+
+    const { locale } = router;
+    const t = locale === "en" ? en : tr;
+
+    const { restaurantId, categoryId } = router.query;
+    const [categories, setCategories] = useState(null);
+
+    useEffect(() => {
+        if (restaurantId) {
+            GetRestaurantCategories(restaurantId);
+        }
+    }, [router.query]);
+
+    const GetRestaurantCategories = async (restaurantId) => {
+        axios.get(`http://menoozi.com.tr/api/categories/${restaurantId}`).then(data => {
+            setCategories(data.data)
+        }).catch(error => console.log(error));
+    }
+
     return (
         <div>
             <div className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900">
                 <div className="flex justify-between h-full">
-                    <a href="/RestaurantPage">
+                    <a href={`/${restaurantId}`}>
                         <img className="w-14 h-14 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRi84iuDjRQz6FKaFClc9gV_ox3Tx1LwgbctQ&s" />
                     </a>
+                    {/* <LanguageSwitcher /> */}
                     <div className="h-14">
                         <div className="h-full flex flex-col justify-center items-center">
                             <ThemeSwitcher />
@@ -46,10 +73,10 @@ export default function Header() {
                     ref={scrollRefNavbarCategories}
                     className="flex overflow-x-scroll whitespace-nowrap py-2 scrollbar-hide mx-8"
                 >
-                    {["Kategori 1", "Kategori 2", "Kategori 3", "Kategori 4", "Kategori 5", "Kategori 6", "Kategori 7"].map((category, index) => (
-                        <span key={index} className="px-2 py-1 text-sm text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
-                            {category}
-                        </span>
+                    {categories?.map((category, index) => (
+                        <a href={`/${restaurantId}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
+                            {category.name_tr}
+                        </a>
                     ))}
                 </nav>
 
