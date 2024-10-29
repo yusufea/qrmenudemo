@@ -1,9 +1,30 @@
+import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function RestaurantPage() {
     const router = useRouter();
+    const { restaurantId } = router.query;
+    const [restaurant, setRestaurant] = useState(null);
+
+    useEffect(() => {
+        if (restaurantId) {
+            const fetchRestaurant = async () => {
+                try {
+                    const response = await axios.get(`http://menoozi.com.tr/api/categories/9ab8ea1d-aef5-4990-a633-11a7b63ad4de`);
+                    setRestaurant(response.data);
+                } catch (error) {
+                    console.error('Veri alınamadı:', error);
+                }
+            };
+
+            fetchRestaurant();
+        }
+    }, [restaurantId]);
+
+    if (!restaurant) return <p>Yükleniyor...</p>;
+
     const scrollRefMostSeller = useRef(null);
 
     const scrollLeft = (scrollRef) => {
@@ -26,10 +47,33 @@ export default function RestaurantPage() {
         return () => clearInterval(interval);
     }, []);
 
+
+
+    const categories = [
+        { name: "Kahvaltı", image: "/images/categories/cate1.webp", columns: 6 },
+        { name: "Nargile", image: "/images/categories/cate2.webp", columns: 6 },
+        { name: "Tatlılar", image: "/images/categories/cate3.webp", columns: 4 },
+        { name: "İçecekler", image: "/images/categories/cate3.webp", columns: 8 },
+        { name: "Çay", image: "/images/categories/cate1.webp", columns: 6 },
+        { name: "Kahve", image: "/images/categories/cate2.webp", columns: 6 },
+    ];
+
+    let currentRow = 0;
+
+    const organizedCategories = categories.reduce((rows, category) => {
+        if (!rows[currentRow] || rows[currentRow].totalColumns + category.columns > 12) {
+            rows.push({ items: [category], totalColumns: category.columns });
+            currentRow = rows.length - 1;
+        } else {
+            rows[currentRow].items.push(category);
+            rows[currentRow].totalColumns += category.columns;
+        }
+        return rows;
+    }, []);
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2 mt-1">
-                <h4 className="text-center text-white text-lg font-bold">Çok Satan Ürünler</h4>
+                <h4 className="text-center text-black text-lg font-bold dark:text-white">Çok Satan Ürünler</h4>
                 <div className="relative flex items-center border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg">
                     {/* Sol Kaydırma Oku */}
                     <button
@@ -74,6 +118,33 @@ export default function RestaurantPage() {
                     </button>
                 </div>
             </div>
+            <div className="flex flex-col gap-2">
+                <h4 className="text-center text-black text-lg font-bold dark:text-white">Kategoriler</h4>
+                <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
+                    {organizedCategories.map((row, rowIndex) => (
+                        <div key={rowIndex} className="flex w-full gap-2 mb-2.5">
+                            {row.items.map((category, index) => (
+                                <a
+                                    href="#"
+                                    key={index}
+                                    className="flex flex-col items-center"
+                                    style={{ width: `${(category.columns / 12) * 100}%` }}
+                                >
+                                    <div className="relative w-full h-[120px]">
+                                        <img src={category.image} alt={category.name} className="w-full h-full object-cover rounded-lg opacity-80" />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-lg font-bold text-white text-center px-2 py-1">
+                                                {category.name}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
         </div>
     );
 }
