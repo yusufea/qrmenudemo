@@ -6,6 +6,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import en from "../../../../locales/en";
 import tr from "../../../../locales/tr";
+import ar from "../../../../locales/ar";
 
 export default function Header() {
     const scrollRefNavbarCategories = useRef(null);
@@ -25,8 +26,8 @@ export default function Header() {
     const router = useRouter();
 
     const { locale } = router;
-    const t = locale === "en" ? en : tr;
-
+    const t = locale === "en" ? en : locale === "ar" ? ar : tr;
+    console.log(t)
     const { restaurantId, categoryId } = router.query;
     const [categories, setCategories] = useState(null);
 
@@ -42,17 +43,25 @@ export default function Header() {
         }).catch(error => console.log(error));
     }
 
+
+    const ReturnCategoryText = (category) => {
+        if(locale === "tr") return category.name_tr
+        if(locale === "en") return category.name_en
+        if(locale === "ar") return category.name_ar
+    }
     return (
         <div>
             <div className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900">
                 <div className="flex justify-between h-full">
-                    <a href={`/${restaurantId}`}>
-                        <img className="w-14 h-14 rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRi84iuDjRQz6FKaFClc9gV_ox3Tx1LwgbctQ&s" />
+                    <a href={`/${locale}/${restaurantId}`}>
+                        <img className="w-20 h-auto rounded-full" src="/images/logo/icon.png" />
                     </a>
-                    {/* <LanguageSwitcher /> */}
-                    <div className="h-14">
-                        <div className="h-full flex flex-col justify-center items-center">
-                            <ThemeSwitcher />
+                    <div className="flex gap-4 items-center">
+                        <LanguageSwitcher />
+                        <div className="h-14">
+                            <div className="h-full flex flex-col justify-center items-center">
+                                <ThemeSwitcher />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,8 +83,8 @@ export default function Header() {
                     className="flex overflow-x-scroll whitespace-nowrap py-2 scrollbar-hide mx-8"
                 >
                     {categories?.map((category, index) => (
-                        <a href={`/${restaurantId}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
-                            {category.name_tr}
+                        <a href={`/${locale}/${restaurantId}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
+                            {ReturnCategoryText(category)}
                         </a>
                     ))}
                 </nav>

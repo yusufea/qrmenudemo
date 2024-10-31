@@ -2,10 +2,15 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import tr from "../../../locales/tr";
+import ar from "../../../locales/ar";
+import en from "../../../locales/en";
 
 export default function RestaurantPage() {
     const router = useRouter();
     const { restaurantId } = router.query;
+    const { locale } = router;
+    const t = locale === "en" ? en : locale === "ar" ? ar : tr;
 
     const [categories, setCategories] = useState(null);
 
@@ -42,11 +47,19 @@ export default function RestaurantPage() {
 
         return () => clearInterval(interval);
     }, []);
-    console.log(categories)
+
+
+
+    const ReturnCategoryText = (category) => {
+        if (locale === "tr") return category.name_tr
+        if (locale === "en") return category.name_en
+        if (locale === "ar") return category.name_ar
+    }
+    
     return (
         <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2 mt-1">
-                <h4 className="text-center text-black text-lg font-bold dark:text-white">Çok Satan Ürünler</h4>
+                <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.mostseller}</h4>
                 <div className="relative flex items-center border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg">
                     {/* Sol Kaydırma Oku */}
                     <button
@@ -92,12 +105,12 @@ export default function RestaurantPage() {
                 </div>
             </div>
             <div className="flex flex-col gap-2">
-                <h4 className="text-center text-black text-lg font-bold dark:text-white">Kategoriler</h4>
+                <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.categories}</h4>
                 <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
                     <div className="flex flex-wrap gap-2.5">
                         {categories?.map((category, index) => (
                             <a
-                                href={`/${restaurantId}/${category.id}`}
+                                href={`/${locale}/${restaurantId}/${category.id}`}
                                 key={index}
                                 className="flex flex-col items-center"
                                 style={{ width: `calc((100% / ${category.column_size === 1 ? '2' : '1'}) - 5px)` }}
@@ -105,8 +118,8 @@ export default function RestaurantPage() {
                                 <div className="relative w-full h-[150px] rounded-lg">
                                     <img src={category.image == undefined ? '/images/noimage.jpg' : category.image} alt={category.name} className="border w-full h-full object-cover opacity-80 rounded-lg" />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-lg font-bold text-white text-center px-2 py-1 break-all">
-                                            {category.name_tr}
+                                        <span className={`text-lg font-bold text-center px-2 py-1 break-all ${category.image == undefined ? "text-slate-700" : "text-white"}`}>
+                                            {ReturnCategoryText(category)}
                                         </span>
                                     </div>
                                 </div>
