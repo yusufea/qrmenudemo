@@ -172,7 +172,7 @@ export default function RestaurantPage() {
                       backgroundSize: 'cover', // Arka planı kapsayıcıya sığdır
                       backgroundPosition: 'center', // Arka planı ortala
                     }}
-                    href="kategori/kahvaltilar/20"
+                    href={`/${locale}/${item.id}`}
                   >
                     <span className="absolute inset-0 bg-black opacity-50" /> {/* Siyah opak katman */}
                     <span className="relative text-white z-10">{ReturnCategoryText(item)}</span> {/* Beyaz yazı */}
