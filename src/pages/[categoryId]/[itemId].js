@@ -44,12 +44,16 @@ export default function ItemPage() {
     }
 
     const ReturnItemText = (category) => {
-        if (category) {
-            if (locale === "tr") return category.name_tr || category.name_en; // Eğer name_tr null ise name_en döner
-            if (locale === "en") return category.name_en || category.name_en; // En kötü ihtimalle name_en döner
-            if (locale === "ar") return category.name_ar || category.name_en; // Eğer name_ar null ise name_en döner
-        }
+        if (!category) return ""; // Eğer kategori yoksa boş bir string döner
+
+        // Öncelik sırasına göre kategori adını döndür
+        if (locale === "tr") return category.name_tr || category.name_en || category.name_ar || ""; // En son yoksa boş döner
+        if (locale === "en") return category.name_en || category.name_tr || category.name_ar || "";
+        if (locale === "ar") return category.name_ar || category.name_en || category.name_tr || "";
+
+        return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
     }
+
     return (
         <div>
             <div>

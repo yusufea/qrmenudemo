@@ -27,12 +27,28 @@ export default function CategoryItems() {
         }).catch(error => console.log(error));
     }
 
+    const ReturnItemText = (category) => {
+        console.log(category,"31")
+        if (!category) return ""; // Eğer kategori yoksa boş bir string döner
+
+        // Öncelik sırasına göre kategori adını döndür
+        if (locale === "tr") return category.name_tr || category.name_en || category.name_ar || ""; // En son yoksa boş döner
+        if (locale === "en") return category.name_en || category.name_tr || category.name_ar || "";
+        if (locale === "ar") return category.name_ar || category.name_en || category.name_tr || "";
+
+        return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
+    }
+
     const ReturnCategoryText = (category) => {
-        if (category) {
-            if (locale === "tr") return category.category_name_tr || category.category_name_en; // Eğer name_tr null ise name_en döner
-            if (locale === "en") return category.category_name_en || category.category_name_en; // En kötü ihtimalle name_en döner
-            if (locale === "ar") return category.category_name_ar || category.category_name_en; // Eğer name_ar null ise name_en döner
-        }
+        console.log(category,"31")
+        if (!category) return ""; // Eğer kategori yoksa boş bir string döner
+
+        // Öncelik sırasına göre kategori adını döndür
+        if (locale === "tr") return category.category_name_tr || category.category_name_en || category.category_name_ar || ""; // En son yoksa boş döner
+        if (locale === "en") return category.category_name_en || category.category_name_tr || category.category_name_ar || "";
+        if (locale === "ar") return category.category_name_ar || category.category_name_en || category.category_name_tr || "";
+
+        return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
     }
     console.log(categoryItems)
     return (
@@ -44,7 +60,7 @@ export default function CategoryItems() {
                         {categoryItems?.items?.map((item, key) => (
                             <a href={`/${locale}/${categoryId}/${item.id}`} key={key} style={{ width: 'calc((100% / 2) - 8px)' }}>
                                 <img src={item.image == undefined ? '/images/noimage.jpg' : item.image} className="rounded-lg border" />
-                                <h5 className="text-sm text-gray-700 mt-2 dark:text-white text-center font-bold">{ReturnCategoryText(item)} {item.price} TL</h5>
+                                <h5 className="text-sm text-gray-700 mt-2 dark:text-white text-center font-bold">{ReturnItemText(item)} {item.price} TL</h5>
                             </a>
                         ))}
                     </div>
