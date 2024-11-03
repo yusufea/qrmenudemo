@@ -21,7 +21,7 @@ export default function BottomNavigation() {
                 </a>
                 <a href={`/${locale}/bilgi`} type="button" class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
                     <IoIosInformationCircle className="w-6 h-6 text-black dark:text-white" />
-                    <span class="text-sm text-gray-500 dark:text-gray-400">{t.profile}</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{t.information}</span>
                 </a>
             </div>
         </div>

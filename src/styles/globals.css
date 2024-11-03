@@ -11,3 +11,16 @@ body {
   background-color: #000;
   color: #fff;
 }
+
+/* CSS */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* Internet Explorer */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}

@@ -5,6 +5,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import en from "../../locales/en";
 import ar from "../../locales/ar";
 import tr from "../../locales/tr";
+import { useTheme } from "next-themes";
 
 export default function RestaurantPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function RestaurantPage() {
     setRestaurantId(restaurantId)
     if (restaurantId) {
       GetRestaurantCategories(restaurantId);
+      GetMostSellerProducts(restaurantId);
     }
   }, []);
 
@@ -52,10 +54,21 @@ export default function RestaurantPage() {
 
 
   const ReturnCategoryText = (category) => {
-    if (locale === "tr") return category.name_tr
-    if (locale === "en") return category.name_en
-    if (locale === "ar") return category.name_ar
+    if (category) {
+      if (locale === "tr") return category.name_tr || category.name_en; // Eğer name_tr null ise name_en döner
+      if (locale === "en") return category.name_en || category.name_en; // En kötü ihtimalle name_en döner
+      if (locale === "ar") return category.name_ar || category.name_en; // Eğer name_ar null ise name_en döner
+    }
   }
+
+  const [mostSellerProducts, setMostSellerProducts] = useState();
+  const GetMostSellerProducts = async (restaurantId) => {
+    axios.get(`http://menoozi.com.tr/api/mostsellers/${restaurantId}`).then(data => {
+      setMostSellerProducts(data.data.items)
+    }).catch(error => console.log(error));
+  }
+
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="flex flex-col gap-6">
@@ -71,7 +84,7 @@ export default function RestaurantPage() {
           </button>
 
           {/* Kategori Listesi */}
-          <div
+          {/* <div
             ref={scrollRefMostSeller}
             className="flex overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide w-full px-0"
           >
@@ -94,8 +107,18 @@ export default function RestaurantPage() {
                 <span className="text-sm text-gray-700 mt-2 dark:text-white">{item.text}</span>
               </a>
             ))}
+          </div> */}
+          <div
+            ref={scrollRefMostSeller}
+            className="flex overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide w-full px-0"
+          >
+            {mostSellerProducts?.map((item, index) => (
+              <a href={`/${item.category_id}/${item.id}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 3)' }}>
+                <img src={`${item.image === null ? '/images/noimage.jpg' : item.image}`} alt={ReturnCategoryText(item)} className="w-full h-full rounded-lg" />
+                <span className="text-sm text-gray-700 mt-2 dark:text-white">{ReturnCategoryText(item)}</span>
+              </a>
+            ))}
           </div>
-
           {/* Sağ Kaydırma Oku */}
           <button
             onClick={() => scrollRight(scrollRefMostSeller)}
@@ -116,10 +139,18 @@ export default function RestaurantPage() {
                 className="flex flex-col items-center"
                 style={{ width: `calc((100% / ${category.column_size === 1 ? '2' : '1'}) - 5px)` }}
               >
-                <div className="relative w-full h-[150px] rounded-lg">
-                  <img src={category.image == undefined ? '/images/noimage.jpg' : category.image} alt={category.name} className="border w-full h-full object-cover opacity-80 rounded-lg" />
+                <div className="relative w-full h-[120px] rounded-lg">
+                  <div className="relative w-full h-full">
+                    <div
+                      style={{
+                        backgroundImage: `url(${category.image === undefined ? '/images/noimage.jpg' : category.image})`,
+                      }}
+                      className="border w-full h-full bg-contain bg-center rounded-lg"
+                    />
+                    {category.image != undefined ? <div className="absolute inset-0 bg-black opacity-30 rounded-lg" /> : null}
+                  </div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className={`text-lg font-bold text-center px-2 py-1 break-all ${category.image == undefined ? "text-slate-700" : "text-white"}`}>
+                    <span className={`text-lg font-bold text-center px-2 py-1 break-all ${theme === 'light' ? (category.image != undefined ? 'text-white' : 'black') : "text-white"}`}>
                       {ReturnCategoryText(category)}
                     </span>
                   </div>

@@ -30,9 +30,9 @@ export default function Info() {
 
     const ReturnCategoryText = (menuItem) => {
         if (menuItem) {
-            if (locale === "tr") return menuItem.name_tr
-            if (locale === "en") return menuItem.name_en
-            if (locale === "ar") return menuItem.name_ar
+            if (locale === "tr") return menuItem.name_tr || menuItem.name_en; // Eğer name_tr null ise name_en döner
+            if (locale === "en") return menuItem.name_en || menuItem.name_en; // En kötü ihtimalle name_en döner
+            if (locale === "ar") return menuItem.name_ar || menuItem.name_en; // Eğer name_ar null ise name_en döner
         }
     }
     return (

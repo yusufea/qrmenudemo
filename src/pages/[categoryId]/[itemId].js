@@ -44,9 +44,11 @@ export default function ItemPage() {
     }
 
     const ReturnItemText = (category) => {
-        if (locale === "tr") return category.name_tr
-        if (locale === "en") return category.name_en
-        if (locale === "ar") return category.name_ar
+        if (category) {
+            if (locale === "tr") return category.name_tr || category.name_en; // Eğer name_tr null ise name_en döner
+            if (locale === "en") return category.name_en || category.name_en; // En kötü ihtimalle name_en döner
+            if (locale === "ar") return category.name_ar || category.name_en; // Eğer name_ar null ise name_en döner
+        }
     }
     return (
         <div>
