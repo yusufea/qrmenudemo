@@ -6,7 +6,7 @@ const LanguageSwitcher = () => {
     const router = useRouter();
     const { locale } = router;
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+    console.log(locale)
     const changeLanguage = (selectedLocale) => {
         router.push(router.pathname, router.asPath, { locale: selectedLocale });
         setIsDropdownOpen(false); // Dropdown'u kapat

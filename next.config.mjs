@@ -5,6 +5,7 @@ const nextConfig = {
   i18n: {
     defaultLocale: 'tr',
     locales: ['tr', 'en', 'ar'],
+    localeDetection: false, // Tarayıcı dil tercihlerini yok say
   },
 };
 

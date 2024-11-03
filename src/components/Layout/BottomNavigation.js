@@ -11,7 +11,7 @@ export default function BottomNavigation() {
     const { restaurantId } = router.query;
     const { locale } = router;
 
-    const t = locale === "en" ? en : locale === "ar" ? ar : tr;
+    const t = locale === "tr" ? tr : locale === "en" ? en : ar;
     return (
         <div class="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
             <div class="grid h-full max-w-xl grid-cols-2 mx-auto font-medium">

@@ -28,7 +28,7 @@ export default function Header() {
 
     const { locale } = router;
     const { restaurantId } = router.query;
-    const t = locale === "en" ? en : locale === "ar" ? ar : tr;
+    const t = locale === "tr" ? tr : locale === "en" ? en : ar;
     const [categories, setCategories] = useState(null);
 
     useEffect(() => {
@@ -49,9 +49,9 @@ export default function Header() {
         if (!category) return ""; // Eğer kategori yoksa boş bir string döner
 
         // Öncelik sırasına göre kategori adını döndür
-        if (locale === "tr") return category.name_tr || category.name_en || category.name_ar || ""; // En son yoksa boş döner
-        if (locale === "en") return category.name_en || category.name_tr || category.name_ar || "";
-        if (locale === "ar") return category.name_ar || category.name_en || category.name_tr || "";
+        if (locale === "tr") return category.name_tr; // En son yoksa boş döner
+        if (locale === "en") return category.name_en ? category.name_en : category.name_tr;
+        if (locale === "ar") return category.name_ar ? category.name_ar : category.name_en ? category.name_en : category.name_tr
 
         return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
     }

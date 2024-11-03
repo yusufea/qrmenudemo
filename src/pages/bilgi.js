@@ -9,7 +9,7 @@ import axios from "axios";
 export default function Info() {
     const router = useRouter();
     const { locale } = router;
-    const t = locale === "en" ? en : locale === "ar" ? ar : tr;
+    const t = locale === "tr" ? tr : locale === "en" ? en : ar;
 
     const [restaurantId, setRestaurantId] = useState();
     const [menuInfos, setMenuInfos] = useState(null);
@@ -29,11 +29,14 @@ export default function Info() {
     }
 
     const ReturnCategoryText = (menuItem) => {
-        if (menuItem) {
-            if (locale === "tr") return menuItem.name_tr || menuItem.name_en; // Eğer name_tr null ise name_en döner
-            if (locale === "en") return menuItem.name_en || menuItem.name_en; // En kötü ihtimalle name_en döner
-            if (locale === "ar") return menuItem.name_ar || menuItem.name_en; // Eğer name_ar null ise name_en döner
-        }
+        if (!menuItem) return ""; // Eğer kategori yoksa boş bir string döner
+
+        // Öncelik sırasına göre kategori adını döndür
+        if (locale === "tr") return menuItem.name_tr; // En son yoksa boş döner
+        if (locale === "en") return menuItem.name_en ? menuItem.name_en : menuItem.name_tr;
+        if (locale === "ar") return menuItem.name_ar ? menuItem.name_ar : menuItem.name_en ? menuItem.name_en : menuItem.name_tr
+
+        return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
     }
     return (
         <div className="flex flex-col gap-3 ">
