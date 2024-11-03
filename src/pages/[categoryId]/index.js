@@ -29,16 +29,16 @@ export default function CategoryItems() {
 
     const ReturnCategoryText = (category) => {
         if (category) {
-            if (locale === "tr") return category.name_tr || category.name_en; // Eğer name_tr null ise name_en döner
-            if (locale === "en") return category.name_en || category.name_en; // En kötü ihtimalle name_en döner
-            if (locale === "ar") return category.name_ar || category.name_en; // Eğer name_ar null ise name_en döner
+            if (locale === "tr") return category.category_name_tr || category.category_name_en; // Eğer name_tr null ise name_en döner
+            if (locale === "en") return category.category_name_en || category.category_name_en; // En kötü ihtimalle name_en döner
+            if (locale === "ar") return category.category_name_ar || category.category_name_en; // Eğer name_ar null ise name_en döner
         }
     }
-
+    console.log(categoryItems)
     return (
         <div>
             <div className="flex flex-col gap-4">
-                <h4 className="text-center text-black text-lg font-bold dark:text-white">{ReturnCategoryText()}</h4>
+                <h4 className="text-center text-black text-lg font-bold dark:text-white text-black">{ReturnCategoryText(categoryItems)}</h4>
                 <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
                     <div className="flex flex-wrap w-full gap-4">
                         {categoryItems?.items?.map((item, key) => (

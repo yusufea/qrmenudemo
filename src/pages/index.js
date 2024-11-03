@@ -157,6 +157,132 @@ export default function RestaurantPage() {
                 </div>
               </a>
             ))}
+            <a
+              href={`test`}
+              className="flex flex-col items-center"
+              style={{ width: `calc((100% / 2) - 5px)` }}
+            >
+              <div className="relative w-full h-[120px] rounded-lg">
+                <div className="relative w-full h-full">
+                  <div
+                    style={{
+                      backgroundImage: `url(/images/categories/cate1.webp)`,
+                    }}
+                    className="border w-full h-full object-none bg-no-repeat bg-center rounded-lg"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
+                    Test
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a
+              href={`test`}
+              className="flex flex-col items-center"
+              style={{ width: `calc((100% / 2) - 5px)` }}
+            >
+              <div className="relative w-full h-[120px] rounded-lg">
+                <div className="relative w-full h-full">
+                  <div
+                    style={{
+                      backgroundImage: `url(/images/categories/cate1.webp)`,
+                    }}
+                    className="border w-full h-full object-scale-down bg-no-repeat bg-center rounded-lg"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
+                    Test
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a
+              href={`test`}
+              className="flex flex-col items-center"
+              style={{ width: `calc((100% / 2) - 5px)` }}
+            >
+              <div className="relative w-full h-[120px] rounded-lg">
+                <div className="relative w-full h-full">
+                  <div
+                    style={{
+                      backgroundImage: `url(/images/categories/cate1.webp)`,
+                    }}
+                    className="border w-full h-full bg-fill bg-no-repeat bg-center rounded-lg"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
+                    Test
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a
+              href={`test`}
+              className="flex flex-col items-center"
+              style={{ width: `calc((100% / 2) - 5px)` }}
+            >
+              <div className="relative w-full h-[120px] rounded-lg">
+                <div className="relative w-full h-full">
+                  <div
+                    style={{
+                      backgroundImage: `url(/images/categories/cate1.webp)`,
+                    }}
+                    className="border w-full h-full bg-cover bg-no-repeat bg-center rounded-lg"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
+                    Test
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a
+              href={`test`}
+              className="flex flex-col items-center"
+              style={{ width: `calc((100% / 2) - 5px)` }}
+            >
+              <div className="relative w-full h-[120px] rounded-lg">
+                <div className="relative w-full h-full">
+                  <div
+                    style={{
+                      backgroundImage: `url(/images/categories/cate1.webp)`,
+                    }}
+                    className="border w-full h-full bg-contain bg-no-repeat bg-center rounded-lg"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
+                    Test
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a
+              href={`test`}
+              className="flex flex-col items-center"
+              style={{ width: `calc((100% / 1) - 5px)` }}
+            >
+              <div className="relative w-full h-[120px] rounded-lg">
+                <div className="relative w-full h-full">
+                  <div
+                    style={{
+                      backgroundImage: `url(/images/categoriescate1.webp)`,
+                    }}
+                    className="border w-full h-full bg-contain bg-center rounded-lg"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
+                    Test
+                  </span>
+                </div>
+              </div>
+            </a>
           </div>
           {/* {organizedCategories.map((row, rowIndex) => (
                         <div key={rowIndex} className="flex w-full gap-2 mb-2.5">
