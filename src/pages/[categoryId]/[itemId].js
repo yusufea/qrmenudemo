@@ -54,6 +54,17 @@ export default function ItemPage() {
         return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
     }
 
+    const ReturnDescriptionText = (item) => {
+        if (!item) return ""; // Eğer kategori yoksa boş bir string döner
+
+        // Öncelik sırasına göre kategori adını döndür
+        if (locale === "tr") return item.description; // En son yoksa boş döner
+        if (locale === "en") return item.description_en ? item.description_en : item.description;
+        if (locale === "ar") return item.description_ar ? item.description_ar : item.description_en ? item.description_en : item.description
+
+        return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
+    }
+
     return (
         <div>
             <div>
@@ -66,7 +77,7 @@ export default function ItemPage() {
                     </div>
                     <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-3 flex flex-col gap-2">
                         <p className="text-black text-lg dark:text-white break-all">
-                            {item.description}
+                            {ReturnDescriptionText(item)}
                         </p>
                     </div>
                 </div>
