@@ -7,6 +7,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import en from "../../../../locales/en";
 import tr from "../../../../locales/tr";
 import ar from "../../../../locales/ar";
+import { useTheme } from "next-themes";
 
 export default function Header() {
     const scrollRefNavbarCategories = useRef(null);
@@ -26,16 +27,16 @@ export default function Header() {
     const router = useRouter();
 
     const { locale } = router;
+    const { restaurantId } = router.query;
     const t = locale === "en" ? en : locale === "ar" ? ar : tr;
-    console.log(t)
-    const { restaurantId, categoryId } = router.query;
     const [categories, setCategories] = useState(null);
 
     useEffect(() => {
+        const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
         if (restaurantId) {
             GetRestaurantCategories(restaurantId);
         }
-    }, [router.query]);
+    }, []);
 
     const GetRestaurantCategories = async (restaurantId) => {
         axios.get(`http://menoozi.com.tr/api/categories/${restaurantId}`).then(data => {
@@ -45,16 +46,19 @@ export default function Header() {
 
 
     const ReturnCategoryText = (category) => {
-        if(locale === "tr") return category.name_tr
-        if(locale === "en") return category.name_en
-        if(locale === "ar") return category.name_ar
+        if (locale === "tr") return category.name_tr
+        if (locale === "en") return category.name_en
+        if (locale === "ar") return category.name_ar
     }
+
+    const { theme, setTheme } = useTheme();
+
     return (
         <div>
             <div className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900">
                 <div className="flex justify-between h-full">
-                    <a href={`/${locale}/${restaurantId}`}>
-                        <img className="w-20 h-auto rounded-full" src="/images/logo/icon.png" />
+                    <a href={`/${locale}/`}>
+                        <img className="w-20 h-auto" src={theme === "light" ? "/images/logo/icon_dark.png" : "/images/logo/icon_white.png"} />
                     </a>
                     <div className="flex gap-4 items-center">
                         <LanguageSwitcher />
@@ -83,7 +87,7 @@ export default function Header() {
                     className="flex overflow-x-scroll whitespace-nowrap py-2 scrollbar-hide mx-8"
                 >
                     {categories?.map((category, index) => (
-                        <a href={`/${locale}/${restaurantId}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
+                        <a href={`/${locale}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
                             {ReturnCategoryText(category)}
                         </a>
                     ))}

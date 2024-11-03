@@ -2,18 +2,19 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { IoIosPricetag } from "react-icons/io";
-import en from "../../../../locales/en";
-import ar from "../../../../locales/ar";
-import tr from "../../../../locales/tr";
+import en from "../../../locales/en";
+import ar from "../../../locales/ar";
+import tr from "../../../locales/tr";
 
 export default function ItemPage() {
     const router = useRouter();
-    const { restaurantId, categoryId, itemId } = router.query;
+    const { categoryId, itemId } = router.query;
     const { locale } = router;
     const t = locale === "en" ? en : locale === "ar" ? ar : tr;
 
     const [item, setItem] = useState(null);
     const [categories, setCategories] = useState(null);
+    const [restaurantId, setRestaurantId] = useState();
 
 
 
@@ -25,32 +26,32 @@ export default function ItemPage() {
 
     const GetItem = async (restaurantId, categoryId) => {
         axios.get(`http://menoozi.com.tr/api/items/${restaurantId}/${categoryId}/${itemId}`).then(data => {
-            setItem(data.data[0])
+            setItem(data.data)
         }).catch(error => console.log(error));
     }
 
     useEffect(() => {
+        const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
+        setRestaurantId(restaurantId)
         if (restaurantId != undefined && categoryId != undefined) {
             GetItem(restaurantId, categoryId);
             GetRestaurantCategories(restaurantId);
         }
     }, [router.query]);
 
-
     if (!item) {
         return <div>Yükleniyor...</div>
     }
 
-    const ReturnCategoryText = (category) => {
-        if(locale === "tr") return category.name_tr
-        if(locale === "en") return category.name_en
-        if(locale === "ar") return category.name_ar
+    const ReturnItemText = (category) => {
+        if (locale === "tr") return category.name_tr
+        if (locale === "en") return category.name_en
+        if (locale === "ar") return category.name_ar
     }
-
     return (
         <div>
             <div>
-                <h4 className="text-center text-black text-lg font-bold dark:text-white">{ReturnCategoryText(item)}</h4>
+                <h4 className="text-center text-black text-lg font-bold dark:text-white">{ReturnItemText(item)}</h4>
                 <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2 flex flex-col gap-2">
                     <img className="border shadow-md w-full rounded-lg" src={item.image == undefined ? '/images/noimage.jpg' : item.image} />
                     <div className="flex items-center justify-center gap-2">
@@ -79,7 +80,7 @@ export default function ItemPage() {
                                     <img src={category.image == undefined ? '/images/noimage.jpg' : category.image} alt={category.name} className="border w-full h-full object-cover opacity-80 rounded-lg" />
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <span className={`text-lg font-bold text-center px-2 py-1 break-all ${category.image == undefined ? "text-slate-700" : "text-white"}`}>
-                                            {ReturnCategoryText(category)}
+                                            {ReturnItemText(category)}
                                         </span>
                                     </div>
                                 </div>
