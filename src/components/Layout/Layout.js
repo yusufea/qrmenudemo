@@ -5,7 +5,7 @@ export default function Layout({ children }) {
     return (
         <div>
             <Header />
-            <main className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900 min-h-screen">
+            <main className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900 min-h-screen mb-24">
                 {children}
             </main>
             <BottomNavigation />

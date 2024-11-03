@@ -70,6 +70,8 @@ export default function RestaurantPage() {
 
   const { theme, setTheme } = useTheme();
 
+
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2 mt-1">
@@ -131,159 +133,57 @@ export default function RestaurantPage() {
       <div className="flex flex-col gap-2">
         <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.categories}</h4>
         <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
-          <div className="flex flex-wrap gap-2.5">
+          {/* <div className="flex flex-wrap gap-2.5">
             {categories?.map((category, index) => (
               <a
                 href={`/${locale}/${category.id}`}
                 key={index}
-                className="flex flex-col items-center"
-                style={{ width: `calc((100% / ${category.column_size === 1 ? '2' : '1'}) - 5px)` }}
+                className="flex flex-col items-center w-full h-[120px]"
               >
-                <div className="relative w-full h-[120px] rounded-lg">
+                <div className="relative rounded-lg w-full h-full">
                   <div className="relative w-full h-full">
                     <div
                       style={{
                         backgroundImage: `url(${category.image === undefined ? '/images/noimage.jpg' : category.image})`,
                       }}
-                      className="border w-full h-full bg-contain bg-center rounded-lg"
+                      className="border w-full bg-contain bg-center rounded-lg h-full"
                     />
                     {category.image != undefined ? <div className="absolute inset-0 bg-black opacity-30 rounded-lg" /> : null}
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className={`text-lg font-bold text-center px-2 py-1 break-all ${theme === 'light' ? (category.image != undefined ? 'text-white' : 'black') : "text-white"}`}>
+                    <span className={`text-lg font-bold text-center px-2 py-1 ${theme === 'light' ? (category.image != undefined ? 'text-white' : 'black') : "text-white"}`}>
                       {ReturnCategoryText(category)}
                     </span>
                   </div>
                 </div>
               </a>
             ))}
-            <a
-              href={`test`}
-              className="flex flex-col items-center"
-              style={{ width: `calc((100% / 2) - 5px)` }}
-            >
-              <div className="relative w-full h-[120px] rounded-lg">
-                <div className="relative w-full h-full">
-                  <div
+          </div> */}
+          <main className="container flex flex-col gap-4 py-2">
+            <section id="categories">
+              <div className="horizontalProductList border-slate-500 shadow border flex flex-wrap justify-evenly items-center gap-1">
+                {categories?.map((item) => (
+                  <a
+                    key={item.id} // Eklenmesi gereken benzersiz bir anahtar
+                    className="homePageCategory flex-grow p-4 py-5 text-center shadow flex items-center justify-center relative overflow-hidden"
                     style={{
-                      backgroundImage: `url(/images/categories/cate1.webp)`,
+                      backgroundImage: `url(${item.image})`,
+                      minHeight: '120px', // Kapsayıcının en az yüksekliği
+                      backgroundSize: 'cover', // Arka planı kapsayıcıya sığdır
+                      backgroundPosition: 'center', // Arka planı ortala
                     }}
-                    className="border w-full h-full object-none bg-no-repeat bg-center rounded-lg"
-                  />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
-                    Test
-                  </span>
-                </div>
+                    href="kategori/kahvaltilar/20"
+                  >
+                    <span className="absolute inset-0 bg-black opacity-50" /> {/* Siyah opak katman */}
+                    <span className="relative text-white z-10">{ReturnCategoryText(item)}</span> {/* Beyaz yazı */}
+                  </a>
+                ))}
               </div>
-            </a>
-            <a
-              href={`test`}
-              className="flex flex-col items-center"
-              style={{ width: `calc((100% / 2) - 5px)` }}
-            >
-              <div className="relative w-full h-[120px] rounded-lg">
-                <div className="relative w-full h-full">
-                  <div
-                    style={{
-                      backgroundImage: `url(/images/categories/cate1.webp)`,
-                    }}
-                    className="border w-full h-full object-scale-down bg-no-repeat bg-center rounded-lg"
-                  />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
-                    Test
-                  </span>
-                </div>
-              </div>
-            </a>
-            <a
-              href={`test`}
-              className="flex flex-col items-center"
-              style={{ width: `calc((100% / 2) - 5px)` }}
-            >
-              <div className="relative w-full h-[120px] rounded-lg">
-                <div className="relative w-full h-full">
-                  <div
-                    style={{
-                      backgroundImage: `url(/images/categories/cate1.webp)`,
-                    }}
-                    className="border w-full h-full bg-fill bg-no-repeat bg-center rounded-lg"
-                  />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
-                    Test
-                  </span>
-                </div>
-              </div>
-            </a>
-            <a
-              href={`test`}
-              className="flex flex-col items-center"
-              style={{ width: `calc((100% / 2) - 5px)` }}
-            >
-              <div className="relative w-full h-[120px] rounded-lg">
-                <div className="relative w-full h-full">
-                  <div
-                    style={{
-                      backgroundImage: `url(/images/categories/cate1.webp)`,
-                    }}
-                    className="border w-full h-full bg-cover bg-no-repeat bg-center rounded-lg"
-                  />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
-                    Test
-                  </span>
-                </div>
-              </div>
-            </a>
-            <a
-              href={`test`}
-              className="flex flex-col items-center"
-              style={{ width: `calc((100% / 2) - 5px)` }}
-            >
-              <div className="relative w-full h-[120px] rounded-lg">
-                <div className="relative w-full h-full">
-                  <div
-                    style={{
-                      backgroundImage: `url(/images/categories/cate1.webp)`,
-                    }}
-                    className="border w-full h-full bg-contain bg-no-repeat bg-center rounded-lg"
-                  />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
-                    Test
-                  </span>
-                </div>
-              </div>
-            </a>
-            <a
-              href={`test`}
-              className="flex flex-col items-center"
-              style={{ width: `calc((100% / 1) - 5px)` }}
-            >
-              <div className="relative w-full h-[120px] rounded-lg">
-                <div className="relative w-full h-full">
-                  <div
-                    style={{
-                      backgroundImage: `url(/images/categoriescate1.webp)`,
-                    }}
-                    className="border w-full h-full bg-contain bg-center rounded-lg"
-                  />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-center px-2 py-1 break-all">
-                    Test
-                  </span>
-                </div>
-              </div>
-            </a>
-          </div>
+            </section>
+          </main>
+
+
+
           {/* {organizedCategories.map((row, rowIndex) => (
                         <div key={rowIndex} className="flex w-full gap-2 mb-2.5">
                             {row.items.map((category, index) => (
