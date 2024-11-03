@@ -118,7 +118,7 @@ export default function RestaurantPage() {
             className="flex overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide w-full px-0"
           >
             {mostSellerProducts?.map((item, index) => (
-              <a href={`/${item.category_id}/${item.id}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 3)' }}>
+              <a href={`/${item.category_id}/${item.id}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 2)' }}>
                 <img src={`${item.image === null ? '/images/noimage.jpg' : item.image}`} alt={ReturnCategoryText(item)} className="w-full h-full rounded-lg" />
                 <span className="text-sm text-gray-700 mt-2 dark:text-white">{ReturnCategoryText(item)}</span>
               </a>

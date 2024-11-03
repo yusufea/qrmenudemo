@@ -63,7 +63,7 @@ export default function Header() {
             <div className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900">
                 <div className="flex justify-between h-full">
                     <a href={`/${locale}/`}>
-                        <img className="w-20 h-auto" src={theme === "light" ? "/images/logo/icon_dark.png" : "/images/logo/icon_white.png"} />
+                        <img className="w-20 h-auto" src={theme === "light" ? "http://menoozi.com.tr/categories/labondy/logolabondy.jpg" : "http://menoozi.com.tr/categories/labondy/logolabondy.jpg"} />
                     </a>
                     <div className="flex gap-4 items-center">
                         <LanguageSwitcher />
