@@ -87,32 +87,6 @@ export default function RestaurantPage() {
           >
             <FaChevronLeft fontSize={18} className="text-slate-600 dark:text-slate-300" />
           </button>
-
-          {/* Kategori Listesi */}
-          {/* <div
-            ref={scrollRefMostSeller}
-            className="flex overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide w-full px-0"
-          >
-            {[
-              { image: "/images/products/prod1.webp", text: "Ürün 1", href: "churros" },
-              { image: "/images/products/prod2.webp", text: "Ürün 2", href: "nargile" },
-              { image: "/images/products/prod3.webp", text: "Ürün 3", href: "sansebastian" },
-              { image: "/images/products/prod2.webp", text: "Ürün 4", href: "nargile" },
-              { image: "/images/products/prod3.webp", text: "Ürün 5", href: "nargile" },
-              { image: "/images/products/prod1.webp", text: "Ürün 6", href: "nargile" },
-              { image: "/images/products/prod3.webp", text: "Ürün 5", href: "nargile" },
-              { image: "/images/products/prod1.webp", text: "Ürün 3", href: "nargile" },
-              { image: "/images/products/prod3.webp", text: "Ürün 3", href: "nargile" },
-              { image: "/images/products/prod3.webp", text: "Ürün 3", href: "nargile" },
-              { image: "/images/products/prod1.webp", text: "Ürün 6", href: "nargile" },
-              { image: "/images/products/prod2.webp", text: "Ürün 8", href: "nargile" },
-            ].map((item, index) => (
-              <a href={`/urun/${item.href}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 3)' }}>
-                <img src={item.image} alt={item.text} className="w-full h-full rounded-lg" />
-                <span className="text-sm text-gray-700 mt-2 dark:text-white">{item.text}</span>
-              </a>
-            ))}
-          </div> */}
           <div
             ref={scrollRefMostSeller}
             className="flex overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide w-full px-0"
@@ -120,7 +94,17 @@ export default function RestaurantPage() {
             {mostSellerProducts?.map((item, index) => (
               <a href={`/${item.category_id}/${item.id}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 2)' }}>
                 <img src={`${item.image === null ? '/images/noimage.jpg' : item.image}`} alt={ReturnCategoryText(item)} className="w-full h-full rounded-lg" />
-                <span className="text-sm text-gray-700 mt-2 dark:text-white">{ReturnCategoryText(item)}</span>
+                <span
+                  className="text-sm text-gray-700 mt-2 dark:text-white truncate"
+                  style={{
+                    maxWidth: '100%', // Genişlik belirleyin (örneğin: '100px' ya da % değer)
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}
+                >
+                  {ReturnCategoryText(item)}
+                </span>
               </a>
             ))}
           </div>
