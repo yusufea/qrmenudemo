@@ -39,7 +39,7 @@ export default function Header() {
     }, []);
 
     const GetRestaurantCategories = async (restaurantId) => {
-        axios.get(`http://menoozi.com.tr/api/categories/${restaurantId}`).then(data => {
+        axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/categories/${restaurantId}`).then(data => {
             setCategories(data.data)
         }).catch(error => console.log(error));
     }

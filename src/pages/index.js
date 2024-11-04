@@ -18,13 +18,14 @@ export default function RestaurantPage() {
     const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
     setRestaurantId(restaurantId)
     if (restaurantId) {
+      console.log(process.env.NEXT_PUBLIC_MENOOZI_API_URL,"2121")
       GetRestaurantCategories(restaurantId);
       GetMostSellerProducts(restaurantId);
     }
   }, []);
 
   const GetRestaurantCategories = async (restaurantId) => {
-    axios.get(`http://menoozi.com.tr/api/categories/${restaurantId}`).then(data => {
+    axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/categories/${restaurantId}`).then(data => {
       setCategories(data.data)
     }).catch(error => console.log(error));
   }
@@ -66,13 +67,12 @@ export default function RestaurantPage() {
 
   const [mostSellerProducts, setMostSellerProducts] = useState();
   const GetMostSellerProducts = async (restaurantId) => {
-    axios.get(`http://menoozi.com.tr/api/mostsellers/${restaurantId}`).then(data => {
+    axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/mostsellers/${restaurantId}`).then(data => {
       setMostSellerProducts(data.data.items)
     }).catch(error => console.log(error));
   }
 
   const { theme, setTheme } = useTheme();
-
 
 
   return (
@@ -120,32 +120,6 @@ export default function RestaurantPage() {
       <div className="flex flex-col gap-2">
         <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.categories}</h4>
         <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
-          {/* <div className="flex flex-wrap gap-2.5">
-            {categories?.map((category, index) => (
-              <a
-                href={`/${locale}/${category.id}`}
-                key={index}
-                className="flex flex-col items-center w-full h-[120px]"
-              >
-                <div className="relative rounded-lg w-full h-full">
-                  <div className="relative w-full h-full">
-                    <div
-                      style={{
-                        backgroundImage: `url(${category.image === undefined ? '/images/noimage.jpg' : category.image})`,
-                      }}
-                      className="border w-full bg-contain bg-center rounded-lg h-full"
-                    />
-                    {category.image != undefined ? <div className="absolute inset-0 bg-black opacity-30 rounded-lg" /> : null}
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className={`text-lg font-bold text-center px-2 py-1 ${theme === 'light' ? (category.image != undefined ? 'text-white' : 'black') : "text-white"}`}>
-                      {ReturnCategoryText(category)}
-                    </span>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div> */}
           <main className="container flex flex-col gap-4 py-2">
             <section id="categories">
               <div className="horizontalProductList border-slate-500 shadow border flex flex-wrap justify-evenly items-center gap-1">
@@ -168,33 +142,8 @@ export default function RestaurantPage() {
               </div>
             </section>
           </main>
-
-
-
-          {/* {organizedCategories.map((row, rowIndex) => (
-                        <div key={rowIndex} className="flex w-full gap-2 mb-2.5">
-                            {row.items.map((category, index) => (
-                                <a
-                                    href="#"
-                                    key={index}
-                                    className="flex flex-col items-center"
-                                    style={{ width: `${(category.columns / 12) * 100}%` }}
-                                >
-                                    <div className="relative w-full h-[120px]">
-                                        <img src={category.image} alt={category.name} className="w-full h-full object-cover rounded-lg opacity-80" />
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <span className="text-lg font-bold text-white text-center px-2 py-1">
-                                                {category.name}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    ))} */}
         </div>
       </div>
-
     </div>
   );
 }

@@ -19,13 +19,13 @@ export default function ItemPage() {
 
 
     const GetRestaurantCategories = async (restaurantId) => {
-        axios.get(`http://menoozi.com.tr/api/categories/${restaurantId}`).then(data => {
+        axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/categories/${restaurantId}`).then(data => {
             setCategories(data.data)
         }).catch(error => console.log(error));
     }
 
     const GetItem = async (restaurantId, categoryId) => {
-        axios.get(`http://menoozi.com.tr/api/items/${restaurantId}/${categoryId}/${itemId}`).then(data => {
+        axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/items/${restaurantId}/${categoryId}/${itemId}`).then(data => {
             setItem(data.data)
         }).catch(error => console.log(error));
     }
@@ -65,6 +65,17 @@ export default function ItemPage() {
         return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
     }
 
+
+    const ReturnCategoryText = (category) => {
+        if (!category) return ""; // Eğer kategori yoksa boş bir string döner
+
+        // Öncelik sırasına göre kategori adını döndür
+        if (locale === "tr") return category.name_tr; // En son yoksa boş döner
+        if (locale === "en") return category.name_en ? category.name_en : category.name_tr;
+        if (locale === "ar") return category.name_ar ? category.name_ar : category.name_en ? category.name_en : category.name_tr
+
+        return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
+    }
     return (
         <div>
             <div>
@@ -82,28 +93,31 @@ export default function ItemPage() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col gap-4 mt-8">
-                <h4 className="text-center text-black text-lg font-bold dark:text-white"> {t.categories} </h4>
+            <div className="flex flex-col gap-2 mt-4">
+                <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.categories}</h4>
                 <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
-                    <div className="flex flex-wrap gap-2.5">
-                        {categories?.map((category, index) => (
-                            <a
-                                href={`/${locale}/${restaurantId}/${category.id}`}
-                                key={index}
-                                className="flex flex-col items-center"
-                                style={{ width: `calc((100% / ${category.column_size === 1 ? '2' : '1'}) - 5px)` }}
-                            >
-                                <div className="relative w-full h-[150px] rounded-lg">
-                                    <img src={category.image == undefined ? '/images/noimage.jpg' : category.image} alt={category.name} className="border w-full h-full object-cover opacity-80 rounded-lg" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className={`text-lg font-bold text-center px-2 py-1 break-all ${category.image == undefined ? "text-slate-700" : "text-white"}`}>
-                                            {ReturnItemText(category)}
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        ))}
-                    </div>
+                    <main className="container flex flex-col gap-4 py-2">
+                        <section id="categories">
+                            <div className="horizontalProductList border-slate-500 shadow border flex flex-wrap justify-evenly items-center gap-1">
+                                {categories?.map((item) => (
+                                    <a
+                                        key={item.id} // Eklenmesi gereken benzersiz bir anahtar
+                                        className="homePageCategory flex-grow p-4 py-5 text-center shadow flex items-center justify-center relative overflow-hidden"
+                                        style={{
+                                            backgroundImage: `url(${item.image})`,
+                                            minHeight: '120px', // Kapsayıcının en az yüksekliği
+                                            backgroundSize: 'cover', // Arka planı kapsayıcıya sığdır
+                                            backgroundPosition: 'center', // Arka planı ortala
+                                        }}
+                                        href={`/${locale}/${item.id}`}
+                                    >
+                                        <span className="absolute inset-0 bg-black opacity-50" /> {/* Siyah opak katman */}
+                                        <span className="relative text-white z-10">{ReturnCategoryText(item)}</span> {/* Beyaz yazı */}
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+                    </main>
                 </div>
             </div>
         </div>
