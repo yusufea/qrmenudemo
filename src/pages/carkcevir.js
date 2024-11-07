@@ -1,71 +1,50 @@
-import SpinWheel from "@/components/Layout/SpinWhell";
 import { useState } from "react";
+import style from "@/styles/luckwhell.module.css";
 
 export default function SpinWhell() {
-    const [names, setNames] = useState([]);
-    const [name, setName] = useState('');
-
-    const handleAddName = (event) => {
-        // Formun varsayılan davranışını engelliyoruz (sayfa yenilenmesini engellemek için)
-        event.preventDefault();
-
-        if (name.trim()) {
-            setNames((prevNames) => [...prevNames, name.trim()]);
-            setName('');
-        }
+    const [value, setValue] = useState(0);
+    const segments = ["100", "1", "50", "0", "1000", "10", "5", "20"]; // Dilim değerleri sırasıyla
+    const [newValue, setNewValue] = useState("");
+    const handleSpin = () => {
+        // Yeni bir dönüş açısı hesapla ve değerini ayarla
+        const newValue = value + Math.ceil(Math.random() * 3600);
+        setValue(newValue)
+        // Döndükten sonra durduğu dilimi hesapla
+        setTimeout(() => {
+            const totalDegrees = newValue % 360;
+            const segmentAngle = 360 / segments.length;
+            const stoppedIndex = Math.floor((360 - totalDegrees + segmentAngle / 2) % 360 / segmentAngle);
+            console.log("Çarkın ucunun gösterdiği değer:", segments[stoppedIndex]);
+            setNewValue(segments[stoppedIndex])
+        }, 5000); // Dönüş süresi kadar bekle (5 saniye)
     };
-
 
     return (
         <div>
-            <>
-                <div className="h-screen py-20 px-2  ">
-                    <div className="grid grid-cols-12 gap-4 items-center h-full ">
-                        <div className="col-span-12 lg:col-span-5">
-                            <div className="flex justify-center items-center gap-2">
-                                <form
-                                    onSubmit={handleAddName}
-                                    className="flex w-[300px]  md:w-[400px] relative"
-                                >
-                                    <input
-                                        className="border-2 py-2 border-btnpurple w-full pl-2 rounded-xl outline-btnpurple "
-                                        type="text"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        placeholder="Competitor name..."
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="bg-btnpurple text-white px-4 rounded-xl absolute right-0 py-[10px] "
-                                    >
-                                        Add
-                                    </button>
-                                </form>
-                                <button
-                                    onClick={() => {
-                                        setNames([]);
-                                    }}
-                                    className="py-[8px] border-2 border-btngreen bg-btngreen text-white  px-4 rounded-xl  "
-                                >
-                                    Reset
-                                </button>
-                            </div>
 
-                            <h1 className="text-center text-white text-5xl mt-10 mb-2">
-                                Competitors
-                            </h1>
-                            {names.map((name, index) => (
-                                <p className="text-xl text-white text-center" key={index}>
-                                    - {name}
-                                </p>
-                            ))}
-                        </div>
-                        <div className="col-span-12 lg:col-span-7 p-10 xl:p-24 lg:-mt-20">
-                            <SpinWheel names={names} setNames={setNames} />
-                        </div>
+            <div className="flex justify-center mt-12">
+                <div className={style.container}>
+                    <div className={style.spinBtn} onClick={handleSpin}>Spin</div>
+                    <div className={style.wheel} style={{ transform: `rotate(${value}deg)` }}>
+                        {segments.map((segmentValue, index) => (
+                            <div
+                                key={index}
+                                className={style.number}
+                                style={{ "--i": index + 1, "--clr": getColor(index) }}
+                            >
+                                <span>{segmentValue}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            </>
+            </div>
+            <h4 className="text-center mt-12">Kazanç: {newValue}</h4>
+
         </div>
-    )
+    );
+}
+
+function getColor(index) {
+    const colors = ["#db7093", "#20b2aa", "#daa520", "#ff340f", "#4169e1", "#3cb371", "#d63e92", "#ff7f50"];
+    return colors[index % colors.length];
 }
