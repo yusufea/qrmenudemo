@@ -5,5 +5,8 @@ export default {
     home: "Home",
     profile: "Profile",
     wifipassword: "Wifi Password",
-    information: "Information"
+    information: "Information",
+    menu: "MENU",
+    opinions_suggestions: "SHARE YOUR OPINIONS / SUGGESTIONS",
+    spinwhell: "SPIN THE WHEEL",
 }

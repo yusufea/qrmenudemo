@@ -5,5 +5,8 @@ export default {
     home: "Anasayfa",
     profile: "Profil",
     wifipassword: "Wifi Şifresi",
-    information: "Bilgiler"
+    information: "Bilgiler",
+    menu: "MENÜ",
+    opinions_suggestions: "GÖRÜŞ / ÖNERİ PAYLAŞ",
+    spinwhell: "ÇARK ÇEVİR",
 }

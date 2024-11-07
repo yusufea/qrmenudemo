@@ -5,5 +5,8 @@ export default {
     home: "الصفحة الرئيسية",
     profile: "حساب تعريفي",
     wifipassword: "كلمة مرور واي فاي",
-    information: "معلومة"
+    information: "معلومة",
+    menu: "قائمة طعام",
+    opinions_suggestions: "شارك برأيك/اقتراحك",
+    spinwhell: "أدر العجلة",
 }

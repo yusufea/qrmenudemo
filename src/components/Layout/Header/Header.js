@@ -62,7 +62,7 @@ export default function Header() {
         <div>
             <div className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900">
                 <div className="flex justify-between h-full">
-                    <a href={`/${locale}/`}>
+                    <a href={`/${locale}/menu`}>
                         <img className="w-20 h-auto" src={theme === "light" ? "http://menoozi.com.tr/categories/labondy/logolabondy.jpg" : "http://menoozi.com.tr/categories/labondy/logolabondy.jpg"} />
                     </a>
                     <div className="flex gap-4 items-center">
@@ -76,37 +76,42 @@ export default function Header() {
                 </div>
             </div>
             <div className="w-screen border-b border-gray-300 dark:border-gray-700"></div>
-            <div className="relative flex items-center border-b border-slate-600 dark:bg-slate-800">
-                {/* Sol Kaydırma Oku */}
-                <button
-                    onClick={() => scrollLeft(scrollRefNavbarCategories)}
-                    className="absolute left-3 z-10 rounded-full hover:bg-gray-300"
-                    style={{ transform: 'translateX(-50%)' }}
-                >
-                    <FaChevronLeft className="text-slate-600 dark:text-slate-400" />
-                </button>
+            {
+                router.pathname === '/' ?
+                    null
+                    :
+                    <div className="relative flex items-center border-b border-slate-600 dark:bg-slate-800">
+                        {/* Sol Kaydırma Oku */}
+                        <button
+                            onClick={() => scrollLeft(scrollRefNavbarCategories)}
+                            className="absolute left-3 z-10 rounded-full hover:bg-gray-300"
+                            style={{ transform: 'translateX(-50%)' }}
+                        >
+                            <FaChevronLeft className="text-slate-600 dark:text-slate-400" />
+                        </button>
 
-                {/* Kategori Listesi */}
-                <nav
-                    ref={scrollRefNavbarCategories}
-                    className="flex overflow-x-scroll whitespace-nowrap py-2 scrollbar-hide mx-8"
-                >
-                    {categories?.map((category, index) => (
-                        <a href={`/${locale}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
-                            {ReturnCategoryText(category)}
-                        </a>
-                    ))}
-                </nav>
+                        {/* Kategori Listesi */}
+                        <nav
+                            ref={scrollRefNavbarCategories}
+                            className="flex overflow-x-scroll whitespace-nowrap py-2 scrollbar-hide mx-8"
+                        >
+                            {categories?.map((category, index) => (
+                                <a href={`/${locale}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
+                                    {ReturnCategoryText(category)}
+                                </a>
+                            ))}
+                        </nav>
 
-                {/* Sağ Kaydırma Oku */}
-                <button
-                    onClick={() => scrollRight(scrollRefNavbarCategories)}
-                    className="absolute right-4 z-10 rounded-full hover:bg-gray-300"
-                    style={{ transform: 'translateX(50%)' }}
-                >
-                    <FaChevronRight className="dark:text-slate-400" />
-                </button>
-            </div>
+                        {/* Sağ Kaydırma Oku */}
+                        <button
+                            onClick={() => scrollRight(scrollRefNavbarCategories)}
+                            className="absolute right-4 z-10 rounded-full hover:bg-gray-300"
+                            style={{ transform: 'translateX(50%)' }}
+                        >
+                            <FaChevronRight className="dark:text-slate-400" />
+                        </button>
+                    </div>
+            }
         </div>
     )
 }
