@@ -18,9 +18,6 @@ export default function Welcome() {
 
   useEffect(() => {
     const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
-    if (restaurantId === "qrmenudemo-three") {
-      restaurantId = "demo"
-    }
     if (restaurantId) {
       GetCustomers(restaurantId);
     }

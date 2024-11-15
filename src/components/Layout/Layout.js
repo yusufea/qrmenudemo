@@ -8,12 +8,7 @@ export default function Layout({ children }) {
 
     return (
         <div>
-            {
-                router.pathname === '//////' ?
-                    null
-                    :
-                    <Header />
-            }
+            <Header />
             <main className="dark:bg-slate-900 min-h-screen pb-24">
                 {children}
             </main>

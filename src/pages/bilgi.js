@@ -16,9 +16,6 @@ export default function Info() {
 
     useEffect(() => {
         const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
-        if (restaurantId === "qrmenudemo-three") {
-            restaurantId = "demo"
-        }
         setRestaurantId(restaurantId)
         if (restaurantId) {
             GetMenuInfos(restaurantId);

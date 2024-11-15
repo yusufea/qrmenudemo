@@ -17,9 +17,6 @@ export default function RestaurantPage() {
 
     useEffect(() => {
         const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
-        if (restaurantId === "qrmenudemo-three") {
-            restaurantId = "demo"
-        }
         setRestaurantId(restaurantId)
         if (restaurantId) {
             console.log(process.env.NEXT_PUBLIC_MENOOZI_API_URL, "2121")

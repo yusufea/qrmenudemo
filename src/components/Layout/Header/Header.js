@@ -33,9 +33,6 @@ export default function Header() {
     const [customers, setCustomers] = useState();
     useEffect(() => {
         const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
-        if (restaurantId === "qrmenudemo-three") {
-            restaurantId = "demo"
-        }
         if (restaurantId) {
             GetRestaurantCategories(restaurantId);
             GetCustomers(restaurantId)
@@ -89,7 +86,7 @@ export default function Header() {
             </div>
             <div className="w-screen border-b border-gray-300 dark:border-gray-700"></div>
             {
-                router.pathname === '/' || router.pathname === '/geribildirim' || router.pathname === '/carkcevir' ?
+                router.pathname === '/' || router.pathname === '/geribildirim' || router.pathname === '/carkcevir'  ?
                     null
                     :
                     <div className="relative flex items-center border-b border-slate-600 dark:bg-slate-800">
