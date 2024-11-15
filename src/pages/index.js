@@ -53,14 +53,21 @@ export default function Welcome() {
             <MdOutlineRestaurantMenu className="text-lg" />
             {t.menu}
           </a>
-          <a href={`/${locale}/geribildirim`} type="button" className="flex btnshadow dark:shadow-2xl py-3 justify-center gap-2 items-center text-[17px] text-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-            <MdComment className="text-lg" />
-            {t.complaints_opinions_suggestions}
-          </a>
-          <a href={`/${locale}/carkcevir`} type="button" className="flex btnshadow dark:shadow-2xl py-3 justify-center gap-2 items-center text-[17px] text-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-            <RxColorWheel className="text-lg" />
-            {t.spinwhell}
-          </a>
+          {customers?.feedback_flag != 0 ?
+            <a href={`/${locale}/geribildirim`} type="button" className="flex btnshadow dark:shadow-2xl py-3 justify-center gap-2 items-center text-[17px] text-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+              <MdComment className="text-lg" />
+              {t.complaints_opinions_suggestions}
+            </a> :
+            null
+          }
+          {customers?.game_of_chance_flag != 0 ?
+            <a href={`/${locale}/carkcevir`} type="button" className="flex btnshadow dark:shadow-2xl py-3 justify-center gap-2 items-center text-[17px] text-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+              <RxColorWheel className="text-lg" />
+              {t.spinwhell}
+            </a> :
+            null
+          }
+
         </div>
       </div>
     </div>
