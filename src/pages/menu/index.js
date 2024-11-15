@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import tr from "../../../locales/tr";
 import en from "../../../locales/en";
 import ar from "../../../locales/ar";
+import { IoMdCart } from "react-icons/io";
 
 export default function RestaurantPage() {
     const router = useRouter();
@@ -76,72 +77,78 @@ export default function RestaurantPage() {
 
 
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2 mt-1">
-                <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.mostseller}</h4>
-                <div className="relative flex items-center border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg">
-                    {/* Sol Kaydırma Oku */}
-                    <button
-                        onClick={() => scrollLeft(scrollRefMostSeller)}
-                        className="absolute left-2 z-10 rounded-full p-2"
-                    >
-                        <FaChevronLeft fontSize={18} className="text-slate-600 dark:text-slate-300" />
-                    </button>
-                    <div
-                        ref={scrollRefMostSeller}
-                        className="flex overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide w-full px-0"
-                    >
-                        {mostSellerProducts?.map((item, index) => (
-                            <a href={`/${item.category_id}/${item.id}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 2)' }}>
-                                <img src={`${item.image === null ? '/images/noimage.jpg' : item.image}`} alt={ReturnCategoryText(item)} className="w-full h-full rounded-lg" />
-                                <span
-                                    className="text-sm text-gray-700 mt-2 dark:text-white truncate"
-                                    style={{
-                                        maxWidth: '100%', // Genişlik belirleyin (örneğin: '100px' ya da % değer)
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }}
-                                >
-                                    {ReturnCategoryText(item)}
-                                </span>
-                            </a>
-                        ))}
-                    </div>
-                    {/* Sağ Kaydırma Oku */}
-                    <button
-                        onClick={() => scrollRight(scrollRefMostSeller)}
-                        className="absolute right-2 z-10 rounded-full p-2"
-                    >
-                        <FaChevronRight fontSize={18} className="text-slate-600 dark:text-slate-300" />
-                    </button>
-                </div>
-            </div>
-            <div className="flex flex-col gap-2">
-                <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.categories}</h4>
-                <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
-                    <main className="container flex flex-col gap-4 py-2">
-                        <section id="categories">
-                            <div className="horizontalProductList border-slate-500 shadow border flex flex-wrap justify-evenly items-center gap-1">
-                                {categories?.map((item) => (
-                                    <a
-                                        key={item.id} // Eklenmesi gereken benzersiz bir anahtar
-                                        className="homePageCategory flex-grow p-4 py-5 text-center shadow flex items-center justify-center relative overflow-hidden"
+        <div className="container mx-auto px-2.5 my-auto py-2.5 ">
+            <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2 mt-1">
+                    <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.mostseller}</h4>
+                    <div className="relative flex items-center border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg">
+                        {/* Sol Kaydırma Oku */}
+                        <button
+                            onClick={() => scrollLeft(scrollRefMostSeller)}
+                            className="absolute left-2 z-10 rounded-full p-2"
+                        >
+                            <FaChevronLeft fontSize={18} className="text-slate-600 dark:text-slate-300" />
+                        </button>
+                        <div
+                            ref={scrollRefMostSeller}
+                            className="flex overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide w-full px-0"
+                        >
+                            {mostSellerProducts?.map((item, index) => (
+                                <a href={`/${item.category_id}/${item.id}`} key={index} className="flex flex-col items-center px-2" style={{ minWidth: 'calc(100% / 2)' }}>
+                                    <img src={`${item.image === null ? '/images/noimage.jpg' : item.image}`} alt={ReturnCategoryText(item)} className="w-full h-full rounded-lg" />
+                                    <span
+                                        className="text-sm text-gray-700 mt-2 dark:text-white truncate"
                                         style={{
-                                            backgroundImage: `url(${item.image})`,
-                                            minHeight: '120px', // Kapsayıcının en az yüksekliği
-                                            backgroundSize: 'cover', // Arka planı kapsayıcıya sığdır
-                                            backgroundPosition: 'center', // Arka planı ortala
+                                            maxWidth: '100%', // Genişlik belirleyin (örneğin: '100px' ya da % değer)
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
                                         }}
-                                        href={`/${locale}/${item.id}`}
                                     >
-                                        <span className="absolute inset-0 bg-black opacity-50" /> {/* Siyah opak katman */}
-                                        <span className="relative text-white z-10">{ReturnCategoryText(item)}</span> {/* Beyaz yazı */}
-                                    </a>
-                                ))}
-                            </div>
-                        </section>
-                    </main>
+                                        {ReturnCategoryText(item)}
+                                    </span>
+                                    {/* <button onClick={() => console.log("test")} className="text-[14px] dark:text-white flex items-center gap-2 justify-center w-full mt-2">
+                                        {t.addtobasket}
+                                        <IoMdCart className="w-4 h-4 text-black dark:text-white" />
+                                    </button> */}
+                                </a>
+                            ))}
+                        </div>
+                        {/* Sağ Kaydırma Oku */}
+                        <button
+                            onClick={() => scrollRight(scrollRefMostSeller)}
+                            className="absolute right-2 z-10 rounded-full p-2"
+                        >
+                            <FaChevronRight fontSize={18} className="text-slate-600 dark:text-slate-300" />
+                        </button>
+                    </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <h4 className="text-center text-black text-lg font-bold dark:text-white">{t.categories}</h4>
+                    <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
+                        <main className="container flex flex-col gap-4 py-2">
+                            <section id="categories">
+                                <div className="horizontalProductList border-slate-500 shadow border flex flex-wrap justify-evenly items-center gap-1">
+                                    {categories?.map((item) => (
+                                        <a
+                                            key={item.id} // Eklenmesi gereken benzersiz bir anahtar
+                                            className="homePageCategory flex-grow p-4 py-5 text-center shadow flex items-center justify-center relative overflow-hidden"
+                                            style={{
+                                                backgroundImage: `url(${item.image})`,
+                                                minHeight: '120px', // Kapsayıcının en az yüksekliği
+                                                backgroundSize: 'cover', // Arka planı kapsayıcıya sığdır
+                                                backgroundPosition: 'center', // Arka planı ortala
+                                            }}
+                                            href={`/${locale}/${item.id}`}
+                                        >
+                                            <span className="absolute inset-0 bg-black opacity-50" /> {/* Siyah opak katman */}
+                                            <span className="relative text-white z-10">{ReturnCategoryText(item)}</span> {/* Beyaz yazı */}
+                                        </a>
+                                    ))}
+                                </div>
+                            </section>
+                        </main>
+                    </div>
                 </div>
             </div>
         </div>

@@ -30,17 +30,24 @@ export default function Header() {
     const { restaurantId } = router.query;
     const t = locale === "tr" ? tr : locale === "en" ? en : ar;
     const [categories, setCategories] = useState(null);
-
+    const [customers, setCustomers] = useState();
     useEffect(() => {
         const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
         if (restaurantId) {
             GetRestaurantCategories(restaurantId);
+            GetCustomers(restaurantId)
         }
     }, []);
 
     const GetRestaurantCategories = async (restaurantId) => {
         axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/categories/${restaurantId}`).then(data => {
             setCategories(data.data)
+        }).catch(error => console.log(error));
+    }
+
+    const GetCustomers = async (restaurantId) => {
+        axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/customers/${restaurantId}`).then(data => {
+            setCustomers(data.data)
         }).catch(error => console.log(error));
     }
 
@@ -58,12 +65,14 @@ export default function Header() {
 
     const { theme, setTheme } = useTheme();
 
+    console.log(customers)
     return (
         <div>
             <div className="container mx-auto px-2.5 my-auto py-2.5 dark:bg-slate-900">
                 <div className="flex justify-between h-full">
-                    <a href={`/${locale}/menu`}>
-                        <img className="w-20 h-auto" src={theme === "light" ? "http://menoozi.com.tr/categories/labondy/logolabondy.jpg" : "http://menoozi.com.tr/categories/labondy/logolabondy.jpg"} />
+                    <a href={`/${locale}`}>
+                        {/* <img className="w-20 h-auto" src={theme === "light" ? "http://menoozi.com.tr/categories/labondy/logolabondy.jpg" : "http://menoozi.com.tr/categories/labondy/logolabondy.jpg"} /> */}
+                        <img className="w-20 h-auto" src={customers?.logo ? customers.logo : '/images/noimage.jpg'} />
                     </a>
                     <div className="flex gap-4 items-center">
                         <LanguageSwitcher />
@@ -77,7 +86,7 @@ export default function Header() {
             </div>
             <div className="w-screen border-b border-gray-300 dark:border-gray-700"></div>
             {
-                router.pathname === '/' ?
+                router.pathname === '/' || router.pathname === '/geribildirim' || router.pathname === '/carkcevir'  ?
                     null
                     :
                     <div className="relative flex items-center border-b border-slate-600 dark:bg-slate-800">

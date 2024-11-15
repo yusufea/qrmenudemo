@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import en from "../../../locales/en";
 import ar from "../../../locales/ar";
 import tr from "../../../locales/tr";
+import { IoMdCart } from "react-icons/io";
+import { LuChefHat } from "react-icons/lu";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function CategoryItems() {
     const router = useRouter();
     const { categoryId } = router.query;
@@ -48,17 +53,85 @@ export default function CategoryItems() {
 
         return ""; // Eğer hiçbir locale tanımlı değilse boş bir string döner
     }
-    console.log(categoryItems)
+
+    const handleClick = (event, item) => {
+        event.preventDefault(); // a etiketinin varsayılan davranışını engelle
+        addToCart(item); // Sepete ürün ekle
+    };
+
+    const addToCart = (item) => {
+        // Mevcut sepeti al veya boş bir dizi oluştur
+        const currentCart = JSON.parse(sessionStorage.getItem('cart')) || [];
+
+        // Ürün zaten sepette mi kontrol et
+        const existingItemIndex = currentCart.findIndex(cartItem => cartItem.id === item.id);
+
+        if (existingItemIndex >= 0) {
+            // Ürün zaten varsa amountu 1 artır
+            currentCart[existingItemIndex].amount += 1;
+        } else {
+            // Ürün yoksa amountu 1 olarak ayarla ve sepete ekle
+            item.amount = 1;
+            currentCart.push(item);
+        }
+
+        // Güncellenmiş sepeti sessionStorage'e kaydet
+        sessionStorage.setItem('cart', JSON.stringify(currentCart));
+
+
+        // Toast bildirimini göster
+        toast.success(t.productaddtocard, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+
     return (
         <div>
-            <div className="flex flex-col gap-4">
-                <h4 className="text-center text-black text-lg font-bold dark:text-white text-black">{ReturnCategoryText(categoryItems)}</h4>
+            <ToastContainer />
+            <div className="flex flex-col">
+                <h4 className="text-center text-black text-lg font-bold dark:text-white my-3">
+                    {ReturnCategoryText(categoryItems)}
+                </h4>
                 <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-2">
                     <div className="flex flex-wrap w-full gap-4">
                         {categoryItems?.items?.map((item, key) => (
-                            <a href={`/${locale}/${categoryId}/${item.id}`} key={key} style={{ width: 'calc((100% / 2) - 8px)' }}>
-                                <img src={item.image == undefined ? '/images/noimage.jpg' : item.image} className="rounded-lg border" />
-                                <h5 className="text-sm text-gray-700 mt-2 dark:text-white text-center font-bold">{ReturnItemText(item)} {item.price} TL</h5>
+                            <a
+                                href={`/${locale}/${categoryId}/${item.id}`}
+                                className="flex flex-col justify-between"
+                                key={key}
+                                style={{ width: 'calc((100% / 2) - 8px)' }}
+                            >
+                                <div className="relative">
+                                    <img
+                                        src={item.image == undefined ? '/images/noimage.jpg' : item.image}
+                                        className="rounded-lg border"
+                                    />
+                                    {item.chef_choise_flag == 1 ?
+                                        <div className="absolute top-2 right-2 bg-slate-800 rounded-full p-1.5">
+                                            <LuChefHat className="text-[20px] text-white" />
+                                        </div> : null
+                                    }
+                                </div>
+                                <h5 className="text-sm text-gray-700 mt-2 dark:text-white text-center font-bold">
+                                    {ReturnItemText(item)} {item.price} TL
+                                </h5>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation(); // a etiketine tıklamayı durdurur
+                                        addToCart(item);
+                                    }}
+                                    className="text-[14px] dark:text-white font-medium flex items-center gap-2 justify-center w-full mt-2"
+                                >
+                                    {t.addtobasket}
+                                    <IoMdCart className="w-4 h-4 text-black dark:text-white" />
+                                </button>
                             </a>
                         ))}
                     </div>
