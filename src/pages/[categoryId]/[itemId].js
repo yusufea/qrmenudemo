@@ -35,6 +35,9 @@ export default function ItemPage() {
 
     useEffect(() => {
         const restaurantId = window.location.hostname.split('.')[0];
+        if (restaurantId === "qrmenudemo-three") {
+            restaurantId = "demo"
+        }
         setRestaurantId(restaurantId)
         if (restaurantId != undefined && categoryId != undefined) {
             GetItem(restaurantId, categoryId);

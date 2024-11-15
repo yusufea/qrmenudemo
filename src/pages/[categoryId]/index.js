@@ -20,6 +20,9 @@ export default function CategoryItems() {
 
     useEffect(() => {
         const restaurantId = window.location.hostname.split('.')[0]; // Subdomain alınır
+        if (restaurantId === "qrmenudemo-three") {
+            restaurantId = "demo"
+        }
         setRestaurantId(restaurantId)
         if (restaurantId != undefined && categoryId != undefined) {
             GetCategoryItems(restaurantId, categoryId);
