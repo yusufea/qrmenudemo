@@ -123,7 +123,7 @@ export default function ItemPage() {
                                 </span>
                             </div>
                         ) : null}
-                        {item.allergens != 0 ? (
+                        {item.allergens && item.allergens.trim() !== "" ? (
                             <div className="flex">
                                 <span className="flex bg-blue-100 text-blue-800 gap-1 text-xs font-medium items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                     <PiSealWarningLight className="text-[20px]" />
@@ -144,14 +144,16 @@ export default function ItemPage() {
                             {ReturnDescriptionText(item)}
                         </p>
                     </div>
-                    <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-3 flex flex-col gap-2">
-                        <h6 className="text-center text-lg font-bold dark:text-white">
-                            {t.allergen}
-                        </h6>
-                        <p className="text-black text-lg dark:text-white break-all">
-                            {item.allergens}
-                        </p>
-                    </div>
+                    {item.allergens && item.allergens.trim() !== "" ? (
+                        <div className="border dark:border-slate-600 shadow-md dark:bg-slate-800 rounded-lg p-3 flex flex-col gap-2">
+                            <h6 className="text-center text-lg font-bold dark:text-white">
+                                {t.allergen}
+                            </h6>
+                            <p className="text-black text-lg dark:text-white break-all">
+                                {item.allergens}
+                            </p>
+                        </div>
+                    ) : null}
                     <div className="flex justify-center items-center">
                         <button onClick={(e) => handleClick(e, item)} className="border rounded-lg text-md w-1/2 py-1 dark:text-white font-medium flex items-center gap-2 justify-center w-full mt-2">
                             {t.addtobasket}

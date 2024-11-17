@@ -7,6 +7,7 @@ export default {
     wifipassword: "Wifi Password",
     information: "Information",
     menu: "MENU",
+    menukck: "Menu",
     opinions_suggestions: "SHARE YOUR OPINIONS / SUGGESTIONS",
     spinwhell: "SPIN THE WHEEL",
     welcome: "Welcome",

@@ -7,6 +7,7 @@ export default {
     wifipassword: "Wifi Şifresi",
     information: "Bilgiler",
     menu: "MENÜ",
+    menukck: "Menü",
     opinions_suggestions: "GÖRÜŞ / ÖNERİ PAYLAŞ",
     spinwhell: "ÇARK ÇEVİR",
     welcome: "HOŞGELDİNİZ..",

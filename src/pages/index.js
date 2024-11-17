@@ -67,7 +67,6 @@ export default function Welcome() {
             </a> :
             null
           }
-
         </div>
       </div>
     </div>

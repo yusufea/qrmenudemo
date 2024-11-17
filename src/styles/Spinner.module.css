@@ -10,6 +10,7 @@
     padding: 3em;
     border-radius: 1em;
     box-shadow: 0 4em 5em rgba(27, 8, 53, 0.2);
+
 }
 
 .container {
@@ -24,6 +25,7 @@
     width: inherit;
     top: 0;
     padding: 0;
+
 }
 
 .spinBtn {

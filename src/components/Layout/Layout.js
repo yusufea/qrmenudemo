@@ -13,7 +13,7 @@ export default function Layout({ children }) {
                 {children}
             </main>
             {
-                router.pathname === '/' || router.pathname === '/carkcevir' || router.pathname === '/geribildirim' ?
+                router.pathname === '/' || router.pathname === '/carkcevir' ?
                     null
                     :
                     <BottomNavigation />

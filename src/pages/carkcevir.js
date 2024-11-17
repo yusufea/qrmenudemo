@@ -5,6 +5,7 @@ import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import confetti from "canvas-confetti";
 
 const SpinWheel = () => {
     const router = useRouter();
@@ -19,6 +20,33 @@ const SpinWheel = () => {
     const [couponCode, setCouponCode] = useState();
     const [winningLabelState, setWinningLabelState] = useState();
     const [canSpin, setCanSpin] = useState(false);
+    const [closeButtonDisabled, setCloseButtonDisabled] = useState(true);
+
+
+    const triggerConfetti = () => {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+        });
+    };
+
+    useEffect(() => {
+        if (winModalShow && couponCode !== 0) {
+            triggerConfetti();
+        }
+    }, [winModalShow, couponCode]); // Modal ve kazanan kontrolü yapıldığında konfeti tetiklenir.
+
+    useEffect(() => {
+        if (winModalShow) {
+            setCloseButtonDisabled(true); // Butonu devre dışı yap
+            const timer = setTimeout(() => {
+                setCloseButtonDisabled(false); // 3 saniye sonra aktif yap
+            }, 3000);
+
+            return () => clearTimeout(timer); // Temizlik işlemi
+        }
+    }, [winModalShow]);
 
     useEffect(() => {
         // Kullanıcının çarkı çevirip çeviremeyeceğini kontrol et
@@ -32,13 +60,27 @@ const SpinWheel = () => {
         }
     }, []);
 
-    console.log(canSpin)
+    const pastelColors = [
+        "#FFB3BA", // Pastel pembe
+        "#FFDFBA", // Pastel turuncu
+        "#FFFFBA", // Pastel sarı
+        "#BAFFC9", // Pastel yeşil
+        "#BAE1FF", // Pastel mavi
+        "#D5BAFF", // Pastel mor
+        "#FFC4E1", // Pastel şeker pembesi
+        "#B9FBC1", // Pastel açık yeşil
+        "#FAF4B7", // Pastel krem
+        "#BFFCC6"  // Pastel nane yeşili
+    ];
+
+
+
     useEffect(() => {
         if (!gameSettings.length) return;
 
         const labels = gameSettings.map(item => item.part_name);
         const data = new Array(labels.length).fill(1);
-        const pieColors = labels.map((_, index) => (index % 2 === 0 ? "#8b35bc" : "#b163da"));
+        const pieColors = labels.map((_, index) => pastelColors[index % pastelColors.length]);
 
         if (wheelRef.current) {
             myChart = new Chart(wheelRef.current, {
@@ -55,9 +97,9 @@ const SpinWheel = () => {
                         tooltip: false,
                         legend: { display: false },
                         datalabels: {
-                            color: "#ffffff",
+                            color: "#334155",
                             formatter: (_, context) => context.chart.data.labels[context.dataIndex],
-                            font: { size: 16 },
+                            font: { size: 14 },
                         },
                     },
                 },
@@ -73,7 +115,7 @@ const SpinWheel = () => {
             const foundItem = gameSettings.find(item => item.part_name === partName);
             if (foundItem) {
                 setCouponCode(foundItem.coupon_code);
-                insertGameWinner(foundItem.coupon_code);
+                insertGameWinner(foundItem.coupon_code, partName);
                 return;
             }
 
@@ -162,18 +204,18 @@ const SpinWheel = () => {
         }
     };
 
-    const insertGameWinner = async (couponCode) => {
+    const insertGameWinner = async (couponCode, winningLabel) => {
         const customerId = sessionStorage.getItem("customerId") || null;
 
         const requestData = {
             customer_id: customerId,
-            award: "Gift Voucher",
+            award: winningLabel,
             date: new Date().toISOString(),
             code: couponCode,
             is_used: 0,
             used_time: null
         };
-        console.log(requestData,"requestData")
+        console.log(requestData, "requestData")
 
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/gameWinners`, requestData);
@@ -198,18 +240,31 @@ const SpinWheel = () => {
             <div ref={finalValueRef} id="final-value" className={styles.finalValue}>
                 <p>Çevir Butonuna Tıklayın</p>
             </div>
-            {winModalShow && couponCode != 0 ? (
+            {winModalShow && couponCode !== 0 ? (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-70 overflow-y-auto h-full w-full flex items-center justify-center">
-                    <div className="p-6 border w-96 shadow-lg rounded-md bg-white h-[300px] py-14">
+                    <div className="p-6 border w-96 shadow-lg rounded-md bg-white h-auto py-14">
                         <div className="text-center">
                             <h3 className="text-2xl font-bold text-gray-900">Tebrikler!</h3>
-                            <div className="mt-2 px-3 py-3">
-                                <p className="text-lg text-gray-500">{winningLabelState} Kazandınız. Kupon Kodunuz: {couponCode}</p>
+                            <div className="mt-1 px-3 py-3">
+                                {/* Ödül Mesajı */}
+                                <p className="text-lg text-gray-700">{winningLabelState} Kazandınız!</p>
+
+                                {/* Kupon Kodunuz Açıklaması */}
+                                <p className="mt-2 text-md text-gray-500">Kupon Kodunuz:</p>
+
+                                {/* Çerçeve İçerisinde Kupon Kodu */}
+                                <div className="flex justify-center">
+                                    <div className="mt-3 border-2 border-gray-300 rounded-lg p-3">
+                                        <p className="text-xl font-bold text-gray-800">{couponCode}</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex justify-center mt-4">
+                            <div className="flex justify-center">
                                 <button
                                     onClick={() => router.push('/')}
-                                    className="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                    className={`px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 ${closeButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
+                                    disabled={closeButtonDisabled}
                                 >
                                     Kapat
                                 </button>
