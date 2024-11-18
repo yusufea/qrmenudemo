@@ -8,12 +8,15 @@ export default function Layout({ children }) {
 
     return (
         <div>
-            <Header />
+            {
+                router.pathname === '/testcark' ?
+                    null : <Header />
+            }
             <main className="dark:bg-slate-900 min-h-screen pb-24">
                 {children}
             </main>
             {
-                router.pathname === '/' || router.pathname === '/carkcevir' ?
+                router.pathname === '/' || router.pathname === '/carkcevir' || router.pathname === '/testcark' ?
                     null
                     :
                     <BottomNavigation />
