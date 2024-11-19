@@ -12,7 +12,7 @@ export default function Layout({ children }) {
                 router.pathname === '/testcark' ?
                     null : <Header />
             }
-            <main className="dark:bg-slate-900 min-h-screen pb-24">
+            <main className={`${router.pathname != "/testcark" ? 'dark:bg-slate-900 min-h-screen pb-24' : 'null'}`}>
                 {children}
             </main>
             {

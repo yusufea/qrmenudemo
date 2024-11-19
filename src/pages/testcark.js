@@ -8,7 +8,7 @@ export default function TestCark() {
 
     useEffect(() => {
         const customerId = sessionStorage.getItem("customerId") || null;
-        if (customerId === null) router.push("/");
+        // if (customerId === null) router.push("/");
 
         if (customerId) {
             GetGameSettings(customerId);
@@ -213,12 +213,7 @@ export default function TestCark() {
                             font-family: 'Ubuntu', sans-serif;
                         }
                         ${container} {
-                            height: 100vh;
-                            width: 100%;
-                            position: fixed;
-                            top: 0;
-                            left: 0;
-                            z-index: 9999;
+
                         }
                         ${wrapper} {
                             width: 100%;
@@ -1051,6 +1046,8 @@ export default function TestCark() {
 
     }, [gameSettings])
     return (
-        <></>
+        <div>
+
+        </div>
     )
 }
