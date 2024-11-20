@@ -98,6 +98,8 @@ export default function TestCark() {
                             });
                         });
                     }
+
+                    console.log(variables)
                     let config = {
                         radius: 180,
                         rotationTime: 5,

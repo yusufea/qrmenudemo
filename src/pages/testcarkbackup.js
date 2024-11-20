@@ -1,6 +1,48 @@
-import { useEffect } from "react"
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react"
 
 export default function TestCark() {
+    const router = useRouter();
+    const [gameSettings, setGameSettings] = useState([]);
+    useEffect(() => {
+        const customerId = sessionStorage.getItem("customerId") || 2;
+        // if (customerId === null) router.push("/");
+
+        if (customerId) {
+            GetGameSettings(customerId);
+        }
+    }, []);
+
+    const GetGameSettings = async (customerId) => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/gameSettings/${customerId}`);
+            setGameSettings(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const insertGameWinner = async (selectedSegment) => {
+        const customerId = sessionStorage.getItem("customerId") || 2;
+
+        const requestData = {
+            customer_id: customerId,
+            award: selectedSegment.part_name,
+            date: new Date().toISOString(),
+            code: selectedSegment.coupon_code,
+            is_used: 0,
+            used_time: null
+        };
+
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/gameWinners`, requestData);
+            console.log("Başarılı:", response.data);
+        } catch (error) {
+            console.error("Hata:", error);
+        }
+    };
+
     useEffect(() => {
         const loadScript = (url) => new Promise((resolve, reject) => {
             const script = document.createElement('script');
@@ -23,7 +65,18 @@ export default function TestCark() {
                 $(document).ready(() => {
                     'use strict';
 
+                    let selectedSegment = {};
+
                     const self = {};
+
+                    // Örnek renk paleti
+                    const colors = ['#FF5733', '#33FF57', '#5733FF', '#FFD700', '#FF6347', '#8A2BE2'];
+
+                    // Rastgele benzersiz renk seçme fonksiyonu
+                    const getUniqueColors = (count) => {
+                        const shuffledColors = [...colors].sort(() => Math.random() - 0.5); // Renkleri karıştır
+                        return shuffledColors.slice(0, count); // Gerekli sayıda renk al
+                    };
 
                     const variables = {
                         addedSliceNames: [],
@@ -32,15 +85,30 @@ export default function TestCark() {
                         selectedText: '',
                     };
 
+                    // Daha önce eklenmiş verileri temizle
+                    variables.addedSliceNames = [];
+
+                    if (variables) {
+                        // Yeni verileri ekle
+                        const uniqueColors = getUniqueColors(gameSettings.length); // Benzersiz renkler
+                        gameSettings.forEach((setting, index) => {
+                            variables.addedSliceNames.push({
+                                id: setting.id,
+                                name: setting.part_name,
+                                color: uniqueColors[index],
+                            });
+                        });
+                    }
+                    console.log(variables)
                     let config = {
                         radius: 180,
                         rotationTime: 5,
                         animationTime: 15,
                         rotateCount: 5,
                         resetBtnText: 'Reset',
-                        startButtonText: 'Start Spin',
-                        dynamicHeaderText: 'You Can Add People To Spin',
-                        spinHeaderText: 'You Can Spin The Wheel',
+                        startButtonText: 'Çevir',
+                        dynamicHeaderText: 'Hediye Kazanmak İçin Çevirin!',
+                        spinHeaderText: 'Hediye Kazanmak İçin Çevirin!',
                         dynamicButtonText: 'Add Person',
                         inputSliceText: 'Enter person name',
                         isAnimation: true,
@@ -221,7 +289,7 @@ export default function TestCark() {
                         self.buildCSS();
                         self.buildHTML();
                         self.setEvents();
-                        self.getSlicesLocal();
+                        // self.getSlicesLocal();
 
                         setTimeout(() => {
                             const loadingScreen = $('.wof-loading-screen-container');
@@ -233,9 +301,6 @@ export default function TestCark() {
                             }
                         }, 1000);
 
-                        if ((localStorage.getItem('config') || []) && starter) {
-                            self.changeConfig();
-                        }
                     };
 
                     self.reset = () => {
@@ -295,7 +360,7 @@ export default function TestCark() {
                         }
                         ${spinBackground} {
                             height: 800px;
-                            width: 450px;
+                            width: 100%;
                             display: flex;
                             align-items: center;
                             justify-content: center;
@@ -318,7 +383,7 @@ export default function TestCark() {
                             width: max-content;
                         }
                         ${spinHeaderContainer} {
-                            width: calc(100% - (60 * 2px));
+                            width: 100%;
                         }
                         ${spinHeader} {
                             font-size: 23px;
@@ -780,6 +845,8 @@ export default function TestCark() {
                             align-items: center;
                             justify-content: center;
                             display: none;
+                            padding-left: 12px;
+                            padding-right: 12px;
                         }
                         ${winnerPopupContainer}${winnerPopupShow} {
                             display: flex;
@@ -799,7 +866,7 @@ export default function TestCark() {
                             display: flex;
                             justify-content: flex-start;
                             align-items: center;
-                            padding-left: 200px;
+                            padding-left: 42px;
                             font-size: 25px;
                         }
                         ${winnerPopupClose} {
@@ -810,7 +877,7 @@ export default function TestCark() {
                         }
                         ${winnerIcon} {
                             position: absolute;
-                            left: 165px;
+                            left: 8px;
                             height: 28px;
                             width: 30px;
                         }
@@ -823,19 +890,19 @@ export default function TestCark() {
                             }
                         }
                         @media (max-width: 512px) {
-                            ${container} {
-                                display: none;
-                            }
+                            // ${container} {
+                            //     display: none;
+                            // }
                         }
                         @media (max-width: 1024px) {
-                            ${container} {
-                                display: none;
-                            }
+                            // ${container} {
+                            //     display: none;
+                            // }
                         }
                         @media screen and (orientation: landscape) and (max-width: 1200px) {
-                            ${container} {
-                                display: none;
-                            }
+                            // ${container} {
+                            //     display: none;
+                            // }
                         }`;
 
                         $('head').append($('<style>').addClass(classes.style).text(customStyle));
@@ -879,29 +946,14 @@ export default function TestCark() {
                                         <button class="${spinStartButton}">${startButtonText}</button>
                                     </div>
                                 </div>
-                                <div class="${dynamicSliceContainer}">
-                                    <div class="${dynamicSliceHeaderContainer}">
-                                        <div class="${dynamicSliceHeader}">${dynamicHeaderText}</div>
-                                    </div>
-                                    <div class="${dynamicSliceAddContainer}">
-                                        <input type="text" class="${dynamicSliceInput}" placeHolder="${inputSliceText}"
-                                            id="sliceName" name="sliceName">
-                                        <div class="${inputError}"></div>
-                                        <button class="${dynamicSliceButton}">${dynamicButtonText}</button>
-                                    </div>
-                                    <div class="${dynamicSliceTextContainer}"></div>
-                                </div>
-                                <div class="${resetButton}">${resetBtnText}</div>
-                                <div class="${spinSettingsIconContainer}">
-                                    <button class="${spinSettingsIcon}"></button>
-                                </div>
+                             
                                 <div class="${spinSettingsPopupContainer}">
                                     <div class="${spinSettingsPopup}"></div>
                                 </div>
                                 <div class="${winnerPopupContainer}">
                                     <div class="${winnerPopup}">
                                         <div class="${winnerHeader}">
-                                            <div>We have a winner!</div>
+                                            <div>Kazandınız!</div>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                             class="${icons} ${winnerIcon}"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3
                                                 16h14"/>
@@ -1047,6 +1099,8 @@ export default function TestCark() {
                                     if (isRotating) {
                                         $(winnerPopupContainer).addClass(winnerPopupShow);
 
+                                        insertGameWinner(selectedSegment)
+
                                         $(winnerPopup).append($('<div>').text(variables.selectedText).addClass(winnerText));
 
                                         $(spinStartButton).removeClass(startButtonDisabled);
@@ -1089,7 +1143,6 @@ export default function TestCark() {
                                 }
                                 $(dynamicSliceInput).removeClass(classes.sliceNameInputError);
 
-                                localStorage.setItem('added-slices', JSON.stringify(variables.addedSliceNames));
                                 self.calculateTextFontSize();
 
                                 $(dynamicSliceInput).val('');
@@ -1103,8 +1156,6 @@ export default function TestCark() {
                         });
 
                         $(resetButton).on('click', () => {
-                            localStorage.removeItem('added-slices');
-                            localStorage.removeItem('config');
 
                             config = { ...defaultConfig };
                             variables.addedSliceNames = [];
@@ -1159,7 +1210,6 @@ export default function TestCark() {
                         $(`${slice}[data-id="${deletedId}"]`).remove();
                         $(element).parent().remove();
 
-                        localStorage.setItem('added-slices', JSON.stringify(variables.addedSliceNames));
 
                         variables.addedSliceNames.forEach((entity, index) => {
                             const angle = (360 / variables.addedSliceNames.length) * index;
@@ -1225,6 +1275,7 @@ export default function TestCark() {
 
                     self.getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+
                     self.setRandomRotateValue = () => {
                         const { slice, } = selectors;
 
@@ -1239,7 +1290,29 @@ export default function TestCark() {
                             variables.slicesText.push(sliceText);
                         });
 
-                        const sliceRotate = variables.slicesRotate[Math.floor(Math.random() * variables.slicesRotate.length)];
+
+                        function getRandomItemByChance(arr) {
+                            // Toplam chance_ratio'yu hesapla
+                            const totalChance = arr.reduce((sum, item) => sum + item.chance_ratio, 0);
+
+                            // 0 ile toplam chance_ratio arasındaki rastgele bir sayı seç
+                            const random = Math.random() * totalChance;
+
+                            let sum = 0;
+
+                            // Chance_ratio'yu kontrol ederek uygun elemanı seç
+                            for (let i = 0; i < arr.length; i++) {
+                                sum += arr[i].chance_ratio;
+                                if (random <= sum) {
+                                    return { ...arr[i], index: i }; // Seçilen öğe ile index bilgisini döndür
+                                }
+                            }
+                        }
+
+                        const selected = getRandomItemByChance(gameSettings);
+
+                        selectedSegment = selected;
+                        const sliceRotate = variables.slicesRotate[selected.index]
                         const selectedSliceBackground = $(slice).eq(variables.slicesRotate.indexOf(sliceRotate)).css('border-color');
                         const selectedSliceTextColor = $(slice).eq(variables.slicesRotate.indexOf(sliceRotate)).find(selectors.sliceText).css('color');
 
@@ -1247,11 +1320,13 @@ export default function TestCark() {
                         $(selectors.winnerIcon).css('color', selectedSliceTextColor);
                         $(selectors.winnerHeader).css('color', selectedSliceTextColor);
                         $(selectors.winnerPopupClose).css('color', selectedSliceTextColor);
+                        variables.selectedText = variables.slicesText[selected.index]
 
-                        variables.selectedText = variables.slicesText[variables.slicesRotate.indexOf(sliceRotate)];
 
                         return sliceRotate;
                     };
+
+
 
                     self.rgbaToHex = (color) => {
                         const rgba = color.match(/\d+/g);
@@ -1360,7 +1435,6 @@ export default function TestCark() {
                     };
 
                     self.getSlicesLocal = () => {
-                        const slicesTextLocal = JSON.parse(localStorage.getItem('added-slices')) || [];
 
                         if (slicesTextLocal.length > 0) {
                             $(selectors.dynamicSliceTextContainer).html('');
@@ -1400,37 +1474,6 @@ export default function TestCark() {
                     };
 
                     self.deleteSelectedSlice = () => {
-                        const { dynamicSliceTextContainer, dynamicSliceText, slice, dynamicWinRate, sliceText } = selectors;
-                        const selectedSlice = variables.slicesText.indexOf(variables.selectedText);
-
-                        $(dynamicSliceTextContainer).html('');
-
-                        variables.slicesText.splice(selectedSlice, 1);
-                        variables.slicesRotate.splice(selectedSlice, 1);
-                        variables.addedSliceNames.splice(selectedSlice, 1);
-
-                        localStorage.setItem('added-slices', JSON.stringify(variables.addedSliceNames));
-
-                        $(dynamicSliceText).eq(selectedSlice).remove();
-                        $(slice).eq(selectedSlice).remove();
-                        $(dynamicWinRate).text(`WinRate: ${self.calculateWinRate()}`);
-
-                        variables.addedSliceNames.forEach((entity, index) => {
-                            const angle = (360 / variables.addedSliceNames.length) * index;
-
-                            $(slice).eq(index).css({
-                                transform: `rotate(${angle}deg)`,
-                                borderColor: `${entity.color} transparent`,
-                                borderWidth: `${config.radius}px 
-                                    ${self.calculateSliceWidth(variables.addedSliceNames.length)}px 0`,
-                                transformOrigin: 'center bottom',
-                            });
-
-                            $(sliceText).eq(index).css({
-                                color: self.findDarkColor(entity.color) ? '#000' : '#FFF',
-                            });
-                        });
-
                         self.setSliceNameAtLists();
                         self.remakeSlicesWidth();
                         self.dynamicSliceDeleteEvent();
@@ -1563,13 +1606,10 @@ export default function TestCark() {
                             }
                         });
 
-                        localStorage.setItem('config', JSON.stringify(newConfig));
-
                         self.changeConfig();
                     };
 
                     self.changeConfig = () => {
-                        const newConfigFile = JSON.parse(localStorage.getItem('config')) || {};
 
                         $.each(newConfigFile, (key, value) => {
                             config[key] = value;
@@ -1585,7 +1625,7 @@ export default function TestCark() {
             console.error('Script Loading Error:', error);
         });
 
-    }, [])
+    }, [gameSettings])
     return (
         <></>
     )
