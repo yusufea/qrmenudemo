@@ -6,7 +6,7 @@ export default function TestCark() {
     const router = useRouter();
     const [gameSettings, setGameSettings] = useState([]);
     useEffect(() => {
-        const customerId = sessionStorage.getItem("customerId") || null;
+        const customerId = sessionStorage.getItem("customerId") || 2;
         // if (customerId === null) router.push("/");
 
         if (customerId) {
@@ -24,7 +24,7 @@ export default function TestCark() {
     };
 
     const insertGameWinner = async (selectedSegment) => {
-        const customerId = sessionStorage.getItem("customerId") || null;
+        const customerId = sessionStorage.getItem("customerId") || 2;
 
         const requestData = {
             customer_id: customerId,
