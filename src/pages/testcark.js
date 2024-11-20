@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 export default function TestCark() {
     const router = useRouter();
     const [gameSettings, setGameSettings] = useState([]);
-
     useEffect(() => {
         const customerId = sessionStorage.getItem("customerId") || null;
         // if (customerId === null) router.push("/");
@@ -21,6 +20,26 @@ export default function TestCark() {
             setGameSettings(response.data);
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const insertGameWinner = async (selectedSegment) => {
+        const customerId = sessionStorage.getItem("customerId") || null;
+
+        const requestData = {
+            customer_id: customerId,
+            award: selectedSegment.part_name,
+            date: new Date().toISOString(),
+            code: selectedSegment.coupon_code,
+            is_used: 0,
+            used_time: null
+        };
+
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_MENOOZI_API_URL}/gameWinners`, requestData);
+            console.log("Başarılı:", response.data);
+        } catch (error) {
+            console.error("Hata:", error);
         }
     };
 
@@ -45,6 +64,7 @@ export default function TestCark() {
             (($) => {
                 $(document).ready(() => {
                     'use strict';
+                    let selectedSegment = {};
 
                     const self = {};
 
@@ -211,6 +231,11 @@ export default function TestCark() {
                             padding: 0;
                             box-sizing: border-box;
                             font-family: 'Ubuntu', sans-serif;
+                        }
+                        html, body {
+                            margin: 0;
+                            padding: 0;
+                            overflow-x: hidden;
                         }
                         ${container} {
 
@@ -559,7 +584,7 @@ export default function TestCark() {
                                 <div class="${winnerPopupContainer}">
                                     <div class="${winnerPopup}">
                                         <div class="${winnerHeader}">
-                                            <div>We have a winner!</div>
+                                            <div>Kazandiniz!</div>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                             class="${icons} ${winnerIcon}"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3
                                                 16h14"/>
@@ -704,7 +729,8 @@ export default function TestCark() {
                                 setTimeout(() => {
                                     if (isRotating) {
                                         $(winnerPopupContainer).addClass(winnerPopupShow);
-
+                                        insertGameWinner(selectedSegment)
+                                        console.log(selectedSegment, "selectedSegment")
                                         $(winnerPopup).append($('<div>').text(variables.selectedText).addClass(winnerText));
 
                                         $(spinStartButton).removeClass(startButtonDisabled);
@@ -717,11 +743,13 @@ export default function TestCark() {
                                             $(sliceContainer).css('animation', 'rotate 20s infinite linear');
                                         }
 
+
                                         self.deleteSelectedSlice();
                                     }
 
                                     self.calculateTextFontSize();
                                 }, (rotationTime + 1) * 1000);
+
                             }
                         });
 
@@ -858,10 +886,8 @@ export default function TestCark() {
                         }
 
                         const selected = getRandomItemByChance(gameSettings);
-                        console.log(selected);
-                        console.log(variables)
-                        console.log(gameSettings)
 
+                        selectedSegment = selected;
                         const sliceRotate = variables.slicesRotate[selected.index]
                         const selectedSliceBackground = $(slice).eq(variables.slicesRotate.indexOf(sliceRotate)).css('border-color');
                         const selectedSliceTextColor = $(slice).eq(variables.slicesRotate.indexOf(sliceRotate)).find(selectors.sliceText).css('color');
