@@ -1,13 +1,28 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react"
+import Cookies from "js-cookie";
 
 export default function TestCark() {
     const router = useRouter();
     const [gameSettings, setGameSettings] = useState([]);
+    const [canSpin, setCanSpin] = useState(false);
+
+    useEffect(() => {
+        // Kullanıcının çarkı çevirip çeviremeyeceğini kontrol et
+        const lastSpinDate = Cookies.get("lastSpinDate");
+        const today = new Date().toISOString().split("T")[0]; // Bugünün tarihi (YYYY-MM-DD formatında)
+
+        if (lastSpinDate === today) {
+            setCanSpin(false); // Bugün çark çevrilmiş
+        } else {
+            setCanSpin(true); // Çark çevrilebilir
+        }
+    }, []);
+    console.log(canSpin)
     useEffect(() => {
         const customerId = sessionStorage.getItem("customerId") || null;
-        if (customerId === null) router.push("/");
+        if (customerId === null) window.location.href = "/";
 
         if (customerId) {
             GetGameSettings(customerId);
@@ -70,7 +85,7 @@ export default function TestCark() {
                     const self = {};
 
                     // Örnek renk paleti
-                    const colors = ['#FF5733', '#33FF57', '#5733FF', '#FFD700', '#FF6347', '#8A2BE2'];
+                    const colors = ['#A7C7E7', '#F4A6C3', '#F9E79F', '#B8E1C4', '#D5A6D7', '#F1C6A1', '#A3D8D0', '#B0B8B4'];
 
                     // Rastgele benzersiz renk seçme fonksiyonu
                     const getUniqueColors = (count) => {
@@ -119,13 +134,13 @@ export default function TestCark() {
                         spinContainerColor: '#363A5D',
                         spinAddContainerColor: '#363A5D',
                         containerColor: '#1F2544',
-                        spinButtonColor: '#416B58',
+                        spinButtonColor: '#A7C7E7',
                         spinAddButtonColor: '#416B58',
-                        spinOuterCircleColor: '#436850',
-                        spinInnerCircleColor: '#ADBC9F',
+                        spinOuterCircleColor: '#fff',
+                        spinInnerCircleColor: '#A7C7E7',
                         winnerPopupBackground: '#363A5D',
                         stopperColor: '#416B58',
-                        spinImage: 'https://i.hizliresim.com/cw090v2.png',
+                        spinImage: 'http://images.menoozi.com.tr/logo/menooz_asai.png',
                     };
 
                     const defaultConfig = { ...config };
@@ -267,8 +282,10 @@ export default function TestCark() {
                         startButtonDisabled: 'wof-start-button-disabled',
                         sliceNameInputError: 'wof-slice-name-input-error',
                         winnerPopupContainer: 'wof-winner-popup-container',
+                        losePopupContainer: 'wof-lose-popup-container',
                         winnerPopup: 'wof-winner-popup',
                         winnerPopupShow: 'wof-winner-popup-show',
+                        losePopupShow: 'wof-lose-popup-show',
                         winnerPopupClose: 'wof-winner-popup-close',
                         winnerIcon: 'wof-winner-icon',
                         icons: 'wof-icons',
@@ -318,8 +335,8 @@ export default function TestCark() {
                             spinSettingsPopup, spinSettingsIconContainer, spinSettingsShow, spinSettingsPopupText,
                             spinSettingsPopupInput, spinSettingsPopupButton, spinCloseContainer, spinCloseButton, winnerIcon,
                             checkboxForSlider, startButtonDisabled, checkboxForRound, dynamicSliceTextDelete, dynamicWinRate,
-                            spinStartContainer, sliceNameInputError, icons, winnerPopupContainer, winnerPopup, fakeSliceText,
-                            winnerPopupShow, winnerPopupClose, inputError, winnerHeader } = selectors;
+                            spinStartContainer, sliceNameInputError, icons, winnerPopupContainer, losePopupContainer, winnerPopup, fakeSliceText,
+                            winnerPopupShow, losePopupShow, winnerPopupClose, inputError, winnerHeader } = selectors;
 
                         const { stopperDirection, stopperUp, isAnimation, spinContainerColor, spinOuterCircleColor,
                             stopperColor, spinInnerCircleColor, spinAddButtonColor, spinAddContainerColor, spinButtonColor,
@@ -395,7 +412,7 @@ export default function TestCark() {
                             text-overflow: ellipsis;
                         }
                         ${spinContainer} {
-                            border: 25px solid ${spinOuterCircleColor};
+                            border: 5px solid ${spinOuterCircleColor};
                             border-radius: 50%;
                             display: flex;
                             align-items: center;
@@ -520,6 +537,7 @@ export default function TestCark() {
                             white-space: nowrap;
                             overflow: hidden;
                             text-overflow: ellipsis;
+                            color: white;
                         }
                         ${startButtonDisabled} {
                             background-color: #ccc;
@@ -851,9 +869,25 @@ export default function TestCark() {
                         ${winnerPopupContainer}${winnerPopupShow} {
                             display: flex;
                         }
+                        ${losePopupContainer} {
+                            z-index: 99999;
+                            width: 100%;
+                            position: absolute;
+                            height: 100%;
+                            background: rgb(0 0 0 / 37%);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            display: none;
+                            padding-left: 12px;
+                            padding-right: 12px;
+                        }
+                        ${losePopupContainer}${losePopupShow} {
+                            display: flex;
+                        }
                         ${winnerPopup} {
                             width: 600px;
-                            height: 200px;
+                            height: 217px;
                             background: ${winnerPopupBackground};
                             border-radius: 10px;
                             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.35);
@@ -917,7 +951,7 @@ export default function TestCark() {
                             spinStartButton, spinIconImage, slices, spinStartContainer, spinHeaderContainer, spinHeader, icons,
                             spinStopperContainer, dynamicSliceAddContainer, dynamicSliceInput, dynamicSliceButton, resetButton,
                             dynamicSliceContainer, dynamicSliceHeader, dynamicSliceTextContainer, spinSettingsIconContainer,
-                            dynamicSliceHeaderContainer, spinSettingsPopupContainer, spinSettingsPopup, winnerPopupContainer,
+                            dynamicSliceHeaderContainer, spinSettingsPopupContainer, spinSettingsPopup, winnerPopupContainer, losePopupContainer,
                             spinSettingsIcon, winnerPopup, winnerPopupClose, inputError, winnerHeader,
                             winnerIcon } = classes;
 
@@ -943,7 +977,7 @@ export default function TestCark() {
                                         </div>
                                     </div>
                                     <div class="${spinStartContainer}">
-                                        <button class="${spinStartButton}">${startButtonText}</button>
+                                        <button class="${spinStartButton} ${!canSpin ? "!bg-gray-400" : null} " ${!canSpin ? "disabled" : null}>${!canSpin ? "Bugün Çevirildi" : startButtonText}</button>
                                     </div>
                                 </div>
                              
@@ -953,11 +987,25 @@ export default function TestCark() {
                                 <div class="${winnerPopupContainer}">
                                     <div class="${winnerPopup}">
                                         <div class="${winnerHeader}">
-                                            <div>Kazandınız!</div>
+                                            <div className="text-white">Kazandınız!</div>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                             class="${icons} ${winnerIcon}"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3
                                                 16h14"/>
                                             </svg>
+                                        </div>
+                                        <div class="${winnerPopupClose}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" 
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                            stroke-linejoin="round" class="${classes.icons}">
+                                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="${losePopupContainer}">
+                                    <div class="${winnerPopup}">
+                                        <div class="${winnerHeader}">
+                                            <div className="text-white">Kaybettin..!</div>
                                         </div>
                                         <div class="${winnerPopupClose}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" 
@@ -1077,10 +1125,10 @@ export default function TestCark() {
 
                     self.setEvents = () => {
                         const { spinStartButton, dynamicSliceButton, sliceContainer, dynamicSliceInput, resetButton,
-                            winnerPopup, winnerPopupContainer, spinSettingsIcon, spinSettingsPopupContainer, inputError,
+                            winnerPopup, winnerPopupContainer, losePopupContainer, spinSettingsIcon, spinSettingsPopupContainer, inputError,
                             slice, winnerPopupClose } = selectors;
 
-                        const { startButtonDisabled, spinSettingsShow, winnerPopupShow, winnerText } = classes;
+                        const { startButtonDisabled, spinSettingsShow, winnerPopupShow, losePopupShow, winnerText } = classes;
 
                         const { confetti, isAnimation, rotationTime } = config;
 
@@ -1097,17 +1145,38 @@ export default function TestCark() {
 
                                 setTimeout(() => {
                                     if (isRotating) {
-                                        $(winnerPopupContainer).addClass(winnerPopupShow);
+                                        if (selectedSegment.part_name === "PAS") {
+                                            $(losePopupContainer).addClass(losePopupShow);
+                                            $(winnerPopup).append($('<div>').text(variables.selectedText).addClass(winnerText));
+                                        }
+                                        else {
+                                            $(winnerPopupContainer).addClass(winnerPopupShow);
+                                            insertGameWinner(selectedSegment)
 
-                                        insertGameWinner(selectedSegment)
+                                            const popupContent = `
+                                        <div class="mt-1 px-3 py-3">
+                                            <p class="text-lg text-white">${selectedSegment.part_name} Kazandınız!</p>
+                                            <p class="mt-2 text-md text-white">Kupon Kodunuz:</p>
+                                           <div class="flex mt-2">
+                                            <div class="flex flex-col justify-start">
+                                                <div class="border-2 border-gray-300 rounded-lg p-3">
+                                                    <p class="text-xl font-bold text-white">${selectedSegment.coupon_code}</p>
+                                                </div>
+                                            </div>
+                                           </div>
+                                        </div>
+                                    `;
+                                            $(winnerPopup).append(popupContent);
 
-                                        $(winnerPopup).append($('<div>').text(variables.selectedText).addClass(winnerText));
+                                            if (confetti) {
+                                                self.getAnimationData();
+                                            }
+
+                                        }
+                                        const today = new Date().toISOString().split("T")[0];
+                                        Cookies.set("lastSpinDate", today, { expires: 1 });
 
                                         $(spinStartButton).removeClass(startButtonDisabled);
-
-                                        if (confetti) {
-                                            self.getAnimationData();
-                                        }
 
                                         if (isAnimation) {
                                             $(sliceContainer).css('animation', 'rotate 20s infinite linear');
@@ -1164,13 +1233,16 @@ export default function TestCark() {
                         });
 
                         $(winnerPopupClose).on('click', () => {
+                            window.location.href = "/";
                             $(winnerPopupContainer).removeClass(classes.winnerPopupShow);
+                            $(losePopupContainer).removeClass(classes.losePopupShow);
                             $(selectors.winnerText).html('');
                         });
 
                         $(selectors.wrapper).on('click', (e) => {
                             if ($(e.target).hasClass(winnerPopupShow)) {
                                 $(winnerPopupContainer).removeClass(winnerPopupShow);
+                                $(losePopupContainer).removeClass(losePopupShow);
                                 $(selectors.winnerText).html('');
                             }
                         });
