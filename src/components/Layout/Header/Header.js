@@ -127,7 +127,15 @@ export default function Header() {
                 <div className="flex justify-between h-full">
                     <a href={`/${locale}`}>
                         {/* <img className="w-20 h-auto" src={theme === "light" ? "http://menoozi.com.tr/categories/labondy/logolabondy.jpg" : "http://menoozi.com.tr/categories/labondy/logolabondy.jpg"} /> */}
-                        <img className="w-20 h-auto" src={customers?.logo ? customers.logo : '/images/noimage.jpg'} />
+                        {
+                            customers?.banner ?
+                                <img className="w-20 h-auto" src={customers?.logo} /> :
+                                <div class="flex items-center justify-center w-20 h-20 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+                                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                    </svg>
+                                </div>
+                        }
                     </a>
                     <div className="flex gap-4 items-center">
                         <IoMdCart onClick={() => setIsDrawerOpen(true)} className="w-6 h-6 text-black dark:text-white" />
@@ -156,17 +164,27 @@ export default function Header() {
                         </button>
 
                         {/* Kategori Listesi */}
-                        <nav
-                            ref={scrollRefNavbarCategories}
-                            className="flex overflow-x-scroll whitespace-nowrap py-2 scrollbar-hide mx-8"
-                        >
-                            {categories?.map((category, index) => (
-                                <a href={`/${locale}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
-                                    {ReturnCategoryText(category)}
-                                </a>
-                            ))}
-                        </nav>
-
+                        {
+                            categories ?
+                                (
+                                    <nav
+                                        ref={scrollRefNavbarCategories}
+                                        className="flex overflow-x-scroll whitespace-nowrap py-2 scrollbar-hide mx-8"
+                                    >
+                                        {categories?.map((category, index) => (
+                                            <a href={`/${locale}/${category.id}`} key={index} className="px-2 py-1 font-semibold text-base text-gray-700 cursor-pointer hover:text-blue-500 dark:text-white">
+                                                {ReturnCategoryText(category)}
+                                            </a>
+                                        ))}
+                                    </nav>
+                                )
+                                :
+                                <div class="flex items-center w-full max-w-[400px] overflow-x-scroll whitespace-nowrap py-4 scrollbar-hide mx-8">
+                                    <div class="h-3 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
+                                    <div class="h-3 ms-2 bg-gray-200 rounded-full dark:bg-gray-700 w-80"></div>
+                                    <div class="h-3 ms-2 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
+                                </div>
+                        }
                         {/* Sağ Kaydırma Oku */}
                         <button
                             onClick={() => scrollRight(scrollRefNavbarCategories)}

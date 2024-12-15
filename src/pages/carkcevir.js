@@ -9,17 +9,22 @@ export default function TestCark() {
     const [canSpin, setCanSpin] = useState(false);
 
     useEffect(() => {
-        // Kullanıcının çarkı çevirip çeviremeyeceğini kontrol et
         const lastSpinDate = Cookies.get("lastSpinDate");
-        const today = new Date().toISOString().split("T")[0]; // Bugünün tarihi (YYYY-MM-DD formatında)
+        const now = new Date();
+
+        // YYYY-MM-DD formatında bugünün tarihi
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString().split("T")[0];
 
         if (lastSpinDate === today) {
-            setCanSpin(false); // Bugün çark çevrilmiş
+            // Eğer spin bugün yapılmışsa, çark çevrilemez
+            setCanSpin(false);
         } else {
-            setCanSpin(true); // Çark çevrilebilir
+            // Eğer cookie bugünün tarihi değilse, çark çevrilebilir
+            setCanSpin(true);
         }
     }, []);
-    console.log(canSpin)
+
+
     useEffect(() => {
         const customerId = sessionStorage.getItem("customerId") || null;
         if (customerId === null) window.location.href = "/";
@@ -1173,9 +1178,10 @@ export default function TestCark() {
                                             }
 
                                         }
-                                        const today = new Date().toISOString().split("T")[0];
-                                        Cookies.set("lastSpinDate", today, { expires: 1 });
+                                        const now = new Date();
+                                        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString().split("T")[0];
 
+                                        Cookies.set("lastSpinDate", today, { expires: 1 }); // Gece yarısı sıfırlanacak
                                         $(spinStartButton).removeClass(startButtonDisabled);
 
                                         if (isAnimation) {
